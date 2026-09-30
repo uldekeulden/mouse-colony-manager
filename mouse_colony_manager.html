@@ -1,0 +1,2371 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Mouse Colony v2.0</title>
+<style>
+/* ============================================================
+   Mouse Colony v2.4 — design system
+   Sampled from the ACPatterns screenshot: flat warm-cream canvas,
+   white cards, borderless beige fields, soft pink brand, turquoise
+   selection, brown ink, rounded sans, sentence-case labels.
+   Single light canvas. Two deliberate deviations from the source,
+   both for legibility:
+     - label brown lightened #8D7C64 -> #736247 (3.19:1 was too low)
+     - white-on-pink -> dark rose ink on pink (1.89:1 was too low)
+   ============================================================ */
+
+:root{
+  color-scheme:light;
+
+  /* shape */
+  --r-sm:8px; --r:11px; --r-card:14px; --r-lg:20px; --r-pill:999px;
+  /* rhythm */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px;
+  /* rounded sans, all locally installed so the file works offline */
+  /* Nunito is what the source site uses; install it locally and it is picked
+     up automatically. Avenir Next is the best fallback already on every Mac. */
+  --font-ui:"Nunito","Nunito Sans","Avenir Next",ui-rounded,-apple-system,
+            BlinkMacSystemFont,"Segoe UI Variable Text","Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --font-mono:"SF Mono","Menlo","Monaco",ui-monospace,"Cascadia Mono","Roboto Mono",Consolas,monospace;
+  /* type */
+  --fs-micro:11px; --fs-label:12px; --fs-sm:13px; --fs-md:14px; --fs-base:15px;
+  --fs-btn:13px; --fs-lg:16px; --fs-h1:20px; --fs-id:18px; --fs-cap:23px; --fs-kpi:30px;
+
+  /* surfaces, straight off the screenshot */
+  --bg:#F8F4E7;
+  --surface:#FFFFFF;
+  --surface-2:#EDE3DA;
+  --line:#E4DACE;
+  --line-2:#D8CBBC;
+
+  /* ink */
+  --text:#634C37;
+  --text-2:#7A6850;
+  --text-3:#736247;
+
+  /* brand: soft pink primary, turquoise selection */
+  --pink:#FDA4B1;
+  --pink-hover:#FEB6C1;
+  --pink-ink:#5E2B37;
+  --teal:#00D2C2;
+  --teal-ink:#06403C;
+  --sprout:#03C376;
+
+  /* semantic */
+  --ok-t:#196B46;  --ok-b:#E7F7EF;
+  --warn-t:#875A08;--warn-b:#FBF0D8;
+  --bad-t:#A22C48; --bad-b:#FDE7EB;
+  --info-t:#0E6270;--info-b:#E2F5F3;
+  --vio-t:#6A4BA5; --vio-b:#F1EAFB;
+  --pink-t:#A6355A;--pink-b:#FDE7EB;
+
+  --ring:#00D2C2;
+  --row-hover:#FBF8EE;
+  --scrim:rgba(99,76,55,.38);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-ui);
+  font-size:var(--fs-base);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+
+button,input,select,textarea{font:inherit;font-family:var(--font-ui)}
+code{
+  font-family:var(--font-mono);font-size:.92em;
+  background:var(--surface-2);border-radius:var(--r-sm);padding:1px 6px;
+}
+:focus-visible{outline:2px solid var(--ring);outline-offset:1px;border-radius:var(--r-sm)}
+
+/* ============================ header ============================ */
+header.top{
+  position:sticky;top:0;z-index:30;
+  background:var(--bg);
+  border-bottom:1px solid var(--line);
+}
+.top-inner{
+  max-width:1600px;margin:auto;
+  padding:var(--s2) var(--s4);
+  display:flex;gap:var(--s3);justify-content:space-between;align-items:center;
+}
+/* the brand block is a pink pill, as on the source site */
+.brand{
+  display:flex;gap:var(--s3);align-items:center;flex:none;
+  background:var(--pink);color:var(--pink-ink);
+  padding:8px 18px 8px 10px;border-radius:var(--r-card);
+}
+.mark{
+  width:36px;height:36px;border-radius:50%;
+  background:#FFFFFF;color:var(--pink-ink);
+  display:grid;place-items:center;
+  font-weight:800;font-size:var(--fs-md);letter-spacing:.01em;
+}
+.brand h1{margin:0;font-size:var(--fs-h1);font-weight:800;letter-spacing:-.005em;color:var(--pink-ink)}
+.brand small{
+  display:block;margin-top:0;
+  font-family:var(--font-mono);font-size:var(--fs-micro);
+  color:var(--pink-ink);opacity:.72;
+}
+.top-actions{display:flex;gap:var(--s2);align-items:center;flex:none}
+
+/* nav pills, single line */
+nav{
+  display:flex;gap:var(--s1);flex-wrap:nowrap;
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:var(--r-pill);
+  padding:var(--s1);
+  overflow-x:auto;scrollbar-width:thin;min-width:0;
+}
+nav::-webkit-scrollbar{height:6px}
+nav::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:var(--r-pill)}
+nav button{
+  border:0;background:transparent;cursor:pointer;
+  padding:6px 13px;border-radius:var(--r-pill);
+  font-size:var(--fs-sm);font-weight:700;
+  color:var(--text-2);white-space:nowrap;flex:none;
+  transition:background .14s ease,color .14s ease;
+}
+nav button:hover{color:var(--text);background:rgba(255,255,255,.7)}
+nav button.active{background:var(--teal);color:var(--teal-ink)}
+
+/* ============================ shell ============================ */
+main{max-width:1600px;margin:auto;padding:var(--s4)}
+.page{display:none}
+.page.active{display:block}
+
+.toolbar{
+  display:flex;justify-content:space-between;gap:var(--s3);
+  align-items:center;flex-wrap:nowrap;
+  margin-bottom:var(--s4);
+  overflow-x:auto;padding-bottom:2px;scrollbar-width:thin;
+}
+.toolbar .left{display:flex;gap:var(--s2);align-items:center;flex-wrap:nowrap;flex:1 1 auto;min-width:0}
+.toolbar .right{display:flex;gap:var(--s2);align-items:center;flex-wrap:nowrap;flex:0 0 auto}
+.toolbar .left>.muted{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.inline-actions{display:flex;gap:var(--s2);align-items:center;flex-wrap:nowrap;margin-top:var(--s3);overflow-x:auto;padding-bottom:2px}
+
+/* segmented switch (add / edit panes) */
+.segbar{
+  display:inline-flex;gap:var(--s1);margin-bottom:var(--s4);
+  background:var(--surface-2);border:1px solid var(--line);
+  border-radius:var(--r-pill);padding:var(--s1);
+}
+.seg{
+  border:0;background:transparent;cursor:pointer;
+  padding:9px 20px;border-radius:var(--r-pill);
+  font-size:var(--fs-sm);font-weight:700;color:var(--text-2);white-space:nowrap;
+}
+.seg:hover{color:var(--text);background:rgba(255,255,255,.7)}
+.seg.active{background:var(--teal);color:var(--teal-ink)}
+.pane{display:none}
+.pane.active{display:block}
+
+/* ============================ buttons ============================ */
+.btn{
+  border:1.5px solid var(--line-2);
+  background:var(--surface-2);
+  color:var(--text);
+  padding:8px 16px;border-radius:var(--r-pill);
+  cursor:pointer;white-space:nowrap;flex:none;
+  font-size:var(--fs-btn);font-weight:700;
+  display:inline-flex;align-items:center;gap:6px;
+  transition:background .14s ease,border-color .14s ease;
+}
+.btn:hover{background:#E5D9CD;border-color:var(--text-3)}
+.btn.primary{background:var(--pink);border-color:var(--pink);color:var(--pink-ink)}
+.btn.primary:hover{background:var(--pink-hover);border-color:var(--pink-ink)}
+.btn.danger{background:var(--bad-b);border-color:#EFB9C6;color:var(--bad-t)}
+.btn.danger:hover{background:#FBD8E0;border-color:var(--bad-t)}
+.btn.ghost{background:transparent;border-color:transparent}
+.btn.ghost:hover{background:var(--surface-2);border-color:var(--line-2)}
+.btn.small{font-size:var(--fs-sm);padding:5px 12px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:disabled:hover{background:var(--surface-2)}
+.btn.primary:disabled:hover{background:var(--pink)}
+label.btn{cursor:pointer}
+
+/* ============================ form controls ============================ */
+/* borderless beige fields, as on the source site */
+input,select,textarea{
+  border:1.5px solid var(--line-2);
+  border-radius:var(--r);
+  background:var(--surface-2);
+  color:var(--text);
+  padding:8px 12px;
+  font-size:var(--fs-md);
+}
+input::placeholder,textarea::placeholder{color:var(--text-3);opacity:.8}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ring)}
+input[type=search]{border-radius:var(--r);min-width:0}
+.toolbar input[type=search]{min-width:170px}
+input[readonly]{color:var(--text-2);opacity:.85}
+
+/* ============================ cards & panels ============================ */
+.cards{
+  display:grid;grid-template-columns:repeat(5,minmax(130px,1fr));
+  gap:var(--s3);margin-bottom:var(--s4);
+}
+.card,.panel,.cage-card,.room-card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--r-card);
+}
+/* cards in a row stretch to equal height; the action row is pinned to the
+   bottom so the buttons line up straight across the grid */
+.cage-card,.room-card{display:flex;flex-direction:column}
+.card-actions{
+  display:flex;gap:var(--s2);flex-wrap:wrap;
+  margin-top:auto;padding-top:var(--s3);
+}
+.card{padding:var(--s4)}
+.kpi .label{font-size:var(--fs-label);font-weight:700;color:var(--text-3)}
+.kpi .value{
+  font-size:var(--fs-kpi);font-weight:800;letter-spacing:-.02em;
+  margin-top:2px;font-variant-numeric:tabular-nums;
+}
+
+.panel{margin-bottom:var(--s4);overflow:hidden}
+.panel h2{
+  margin:0;padding:var(--s3) var(--s4);
+  background:var(--surface-2);
+  font-size:var(--fs-md);font-weight:800;
+  color:var(--text-2);
+}
+.panel-body{padding:var(--s4)}
+
+.room-grid,.cage-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));
+  gap:var(--s3);
+}
+.room-card,.cage-card{padding:var(--s4)}
+.room-card h3,.cage-card h3{
+  font-size:var(--fs-lg);margin:0 0 6px;font-weight:800;
+  font-family:var(--font-mono);letter-spacing:-.01em;
+}
+.meta{font-size:var(--fs-sm);color:var(--text-2);line-height:1.65}
+.progress{
+  height:10px;border-radius:var(--r-pill);
+  background:var(--surface-2);overflow:hidden;margin-top:var(--s2);
+}
+.progress span{display:block;height:100%;background:var(--teal)}
+.capacity{
+  font-family:var(--font-mono);font-size:var(--fs-cap);font-weight:800;
+  font-variant-numeric:tabular-nums;
+}
+.rule-ok{color:var(--ok-t);font-weight:700}
+.rule-bad{color:var(--bad-t);font-weight:800}
+
+/* ============================ badges ============================ */
+.badge{
+  white-space:nowrap;
+  display:inline-block;border-radius:var(--r-pill);
+  padding:3px 11px;
+  font-size:var(--fs-label);font-weight:700;
+  background:var(--surface-2);color:var(--text-2);
+}
+.badge.active{background:var(--ok-b);color:var(--ok-t)}
+.badge.breeding{background:var(--pink-b);color:var(--pink-t)}
+.badge.pregnant{background:var(--pink);color:var(--pink-ink)}
+.badge.male{background:var(--info-b);color:var(--info-t)}
+.badge.female{background:var(--pink-b);color:var(--pink-t)}
+.badge.weaning{background:var(--warn-b);color:var(--warn-t)}
+.badge.overdue,.badge.open,.badge.vet-care-new-health-report{background:var(--bad-b);color:var(--bad-t)}
+.badge.done,.badge.resolved{background:var(--ok-b);color:var(--ok-t)}
+.badge.dead,.badge.sacrificed{background:var(--surface-2);color:var(--text-3);text-decoration:line-through}
+.badge.holding{background:var(--surface-2);color:var(--text-2)}
+.badge.quarantine{background:var(--warn-b);color:var(--warn-t)}
+.badge.experimental{background:var(--info-b);color:var(--info-t)}
+.badge.vet-care{background:var(--vio-b);color:var(--vio-t)}
+.badge.ended,.badge.weaned{background:var(--surface-2);color:var(--text-3)}
+.badge.auto{background:var(--info-b);color:var(--info-t)}
+.badge.hom{background:var(--vio-b);color:var(--vio-t)}
+.badge.het{background:var(--info-b);color:var(--info-t)}
+.badge.wt{background:var(--surface-2);color:var(--text-2)}
+.badge.unknown{background:var(--surface-2);color:var(--text-3)}
+.badge.absl-2,.badge.absl-1{background:var(--info-b);color:var(--info-t);font-family:var(--font-mono)}
+.badge.remove-male{background:var(--bad-t);color:#FFFFFF}
+.badge.death,.badge.sacrifice{background:var(--bad-b);color:var(--bad-t)}
+.badge.transfer,.badge.move{background:var(--info-b);color:var(--info-t)}
+.badge.genotype,.badge.treatment{background:var(--vio-b);color:var(--vio-t)}
+.badge.litter-born,.badge.wean{background:var(--warn-b);color:var(--warn-t)}
+.badge.nursing{background:var(--info-b);color:var(--info-t)}
+.badge.new-mouse,.badge.new-cage,.badge.mouse-update,.badge.cage-update{background:var(--surface-2);color:var(--text-2)}
+
+/* ============================ mouse identity ============================ */
+.mouse-id{
+  white-space:nowrap;
+  font-family:var(--font-mono);
+  font-size:var(--fs-id);font-weight:800;letter-spacing:.02em;
+  font-variant-numeric:tabular-nums;
+}
+.ear{
+  white-space:nowrap;
+  display:inline-block;padding:2px 9px;border-radius:var(--r-pill);
+  background:var(--surface-2);
+  font-family:var(--font-mono);font-weight:700;font-size:var(--fs-sm);
+  color:var(--text-2);
+}
+.mouse-chip{
+  border-top:1px solid var(--line);
+  padding:9px 0;display:flex;justify-content:space-between;gap:var(--s3);
+}
+.mouse-chip:first-of-type{margin-top:6px}
+
+/* ============================ tables ============================ */
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:var(--fs-md);font-variant-numeric:tabular-nums}
+th,td{
+  padding:8px 10px;border-bottom:1px solid var(--line);
+  text-align:left;vertical-align:top;
+  white-space:normal;overflow-wrap:anywhere;
+}
+th{
+  position:sticky;top:0;z-index:2;
+  background:var(--surface-2);color:var(--text-3);
+  font-size:var(--fs-label);font-weight:800;
+  border-bottom:0;
+}
+/* sortable headers: teal ink, teal rule, and a persistent sort glyph */
+th.sortable{
+  cursor:pointer;user-select:none;
+  color:var(--info-t);
+  border-bottom:2px solid var(--teal);
+}
+th.sortable::after{content:" \2195";opacity:.45;font-weight:700}
+th.sortable:hover{background:#D9F5F2}
+th.sortable.on{background:#D9F5F2}
+th.sortable[data-sort="asc"]::after{content:" \25B2";opacity:1}
+th.sortable[data-sort="desc"]::after{content:" \25BC";opacity:1}
+tbody tr:hover{background:var(--row-hover)}
+tbody tr:last-child td{border-bottom:0}
+td.note{min-width:120px;color:var(--text-2)}
+
+/* ============================ alerts & notices ============================ */
+.alert{
+  padding:11px 15px;border-radius:var(--r);
+  background:var(--warn-b);color:var(--warn-t);
+  margin-bottom:var(--s2);line-height:1.6;font-size:var(--fs-md);font-weight:600;
+}
+.alert.red{background:var(--bad-b);color:var(--bad-t)}
+.alert.vet{background:var(--vio-b);color:var(--vio-t)}
+.alert.ok{background:var(--ok-b);color:var(--ok-t)}
+
+.notice{
+  padding:12px 15px;border-radius:var(--r);
+  background:var(--surface-2);
+  line-height:1.65;font-size:var(--fs-md);color:var(--text-2);
+}
+.notice strong{color:var(--text)}
+.help{font-size:var(--fs-sm);color:var(--text-3);line-height:1.65}
+.help strong{color:var(--text-2)}
+.muted{color:var(--text-3)}
+.from-strain{
+  display:inline-block;border-radius:var(--r-pill);
+  padding:0 7px;margin-left:4px;
+  font-size:var(--fs-micro);font-weight:700;
+  background:var(--info-b);color:var(--info-t);white-space:nowrap;
+}
+.empty{text-align:center;padding:var(--s6);color:var(--text-3);font-size:var(--fs-md)}
+
+/* ============================ modals ============================ */
+.modal-bg{
+  position:fixed;inset:0;z-index:70;padding:var(--s5);
+  background:var(--scrim);
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+  display:none;align-items:center;justify-content:center;
+}
+.modal-bg.open{display:flex}
+.modal{
+  width:min(860px,100%);max-height:92vh;overflow:auto;
+  background:var(--surface);
+  border:2px solid var(--line-2);
+  border-radius:var(--r-lg);
+}
+.modal>header{
+  position:sticky;top:0;z-index:3;
+  padding:var(--s4);
+  background:var(--surface-2);
+  display:flex;justify-content:space-between;align-items:center;gap:var(--s3);
+}
+.modal h3{font-size:var(--fs-lg);margin:0;font-weight:800;color:var(--text)}
+.modal form{padding:var(--s4)}
+
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s3)}
+/* sentence-case labels, as on the source site */
+.field label{
+  display:block;margin-bottom:6px;
+  font-size:var(--fs-md);font-weight:600;
+  color:var(--text-3);
+}
+.field.full{grid-column:1/-1}
+.field input,.field select,.field textarea{width:100%}
+.actions{display:flex;gap:var(--s2);justify-content:flex-end;margin-top:var(--s4);flex-wrap:nowrap}
+.sep{height:1px;background:var(--line);margin:var(--s4) 0}
+
+.geno-row{display:grid;grid-template-columns:1fr 180px 44px;gap:8px;align-items:center;margin-bottom:8px}
+.geno-list{padding:var(--s3);border-radius:var(--r);background:var(--bg);margin-bottom:var(--s2)}
+.wizard-box{border-radius:var(--r-card);padding:var(--s3);background:var(--bg);margin-top:var(--s2)}
+.wizard-box>strong{display:block;font-size:var(--fs-md);font-weight:800;color:var(--text-2);margin-bottom:var(--s1)}
+
+/* ============================ save bar ============================ */
+.savebar{max-width:1600px;margin:var(--s2) auto 0;padding:0 var(--s4)}
+.savebar-inner{
+  display:flex;gap:var(--s3);align-items:center;flex-wrap:nowrap;
+  padding:10px var(--s4);
+  border-radius:var(--r-pill);
+  background:var(--surface);
+  border:1px solid var(--line);
+  overflow-x:auto;
+}
+.save-dot{
+  width:11px;height:11px;border-radius:50%;
+  background:var(--sprout);display:inline-block;flex:none;
+}
+.save-dot.dirty{background:var(--warn-t)}
+.save-label{font-size:var(--fs-md);font-weight:800;white-space:nowrap}
+.save-detail{color:var(--text-3);font-size:var(--fs-sm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.savebar .spacer{flex:1 1 auto;min-width:var(--s2)}
+
+footer{
+  max-width:1600px;margin:0 auto var(--s5);padding:var(--s3) var(--s4) 0;
+  color:var(--text-3);
+  font-family:var(--font-mono);font-size:var(--fs-micro);
+}
+
+/* ============================ batch add grid ============================ */
+.batch-defaults{grid-template-columns:repeat(4,minmax(0,1fr))}
+table.batch{table-layout:fixed}
+table.batch th,table.batch td{padding:5px 6px;vertical-align:middle;white-space:nowrap}
+table.batch input,table.batch select{
+  padding:6px 8px;font-size:var(--fs-sm);border-radius:var(--r-sm);
+  width:100%;min-width:0;background:var(--bg);border-width:1px;
+}
+table.batch th:nth-child(1){width:26px}
+table.batch th:nth-child(2){width:62px}
+table.batch th:nth-child(3){width:56px}
+table.batch th:nth-child(4){width:9%}
+table.batch th:nth-child(5){width:8%}
+table.batch th:nth-child(6){width:8%}
+table.batch th:nth-child(7){width:8.5%}
+table.batch th:nth-child(8){width:11%}
+table.batch th:nth-child(9){width:13%}
+table.batch th:nth-child(10){width:8.5%}
+table.batch th:nth-child(12){width:38px}
+table.batch tbody tr:hover{background:transparent}
+.rowno{font-family:var(--font-mono);font-size:var(--fs-sm);color:var(--text-3);text-align:right}
+#batchPaste{width:100%;font-family:var(--font-mono);font-size:var(--fs-sm);line-height:1.7}
+.colmap{font-family:var(--font-mono);font-size:var(--fs-sm);color:var(--text-3);line-height:1.9}
+
+/* ============================ batch edit grid ============================ */
+/* fields must be free to shrink inside the grid, or the search box
+   overlaps its neighbour */
+.filterbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:var(--s2)}
+.filterbar .field{min-width:0}
+.filterbar input,.filterbar select{width:100%;min-width:0;border-radius:var(--r)}
+table.editgrid{table-layout:fixed}
+table.editgrid th,table.editgrid td{padding:5px 6px;vertical-align:middle;white-space:nowrap}
+table.editgrid input,table.editgrid select{
+  padding:6px 8px;font-size:var(--fs-sm);border-radius:var(--r-sm);
+  width:100%;min-width:0;background:var(--bg);border-width:1px;
+}
+table.editgrid th:nth-child(1){width:32px}
+table.editgrid th:nth-child(2){width:60px}
+table.editgrid th:nth-child(3){width:58px}
+table.editgrid th:nth-child(4){width:9.5%}
+table.editgrid th:nth-child(5){width:8.5%}
+table.editgrid th:nth-child(6){width:15%}
+table.editgrid th:nth-child(7){width:11%}
+table.editgrid th:nth-child(8){width:14%}
+table.editgrid th:nth-child(9){width:9%}
+table.editgrid th:nth-child(10){width:7.5%}
+table.editgrid tbody tr:hover{background:transparent}
+table.editgrid tr.dirty>td:first-child{border-left:4px solid var(--warn-t)}
+table.editgrid .cell-dirty{background:var(--warn-b);color:var(--warn-t);font-weight:700}
+table.editgrid td.idcell{font-family:var(--font-mono);font-weight:800;font-size:var(--fs-md)}
+.chk{width:16px;height:16px;accent-color:var(--teal);cursor:pointer;margin:0}
+/* drag-to-select over the grid */
+.be-grid{position:relative}
+.be-grid.dragging{cursor:crosshair;user-select:none}
+#beMarquee{
+  position:absolute;display:none;z-index:5;pointer-events:none;
+  border:1.5px solid var(--teal);background:rgba(0,210,194,.16);border-radius:3px;
+}
+table.editgrid td.chkcell,table.editgrid td.idcell{cursor:crosshair}
+table.editgrid tr.sel>td{background:rgba(0,210,194,.10)}
+table.editgrid tr.marq>td{background:rgba(0,210,194,.20)}
+th.chkcell,td.chkcell{text-align:center;padding-left:2px;padding-right:2px}
+.tally{font-family:var(--font-mono);font-size:var(--fs-sm);color:var(--text-2);white-space:nowrap}
+.seq-preview{
+  font-family:var(--font-mono);font-size:var(--fs-sm);line-height:1.9;
+  color:var(--text-2);max-height:190px;overflow:auto;
+}
+.apply-bar{display:grid;grid-template-columns:minmax(170px,1fr) minmax(210px,2fr) auto;gap:var(--s2);align-items:end}
+.apply-bar>div{min-width:0}
+
+/* ============================ responsive ============================ */
+@media(max-width:1200px){
+  .cards{grid-template-columns:repeat(3,1fr)}
+  .batch-defaults{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:900px){
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .top-inner{flex-direction:column;align-items:stretch}
+  .form-grid{grid-template-columns:1fr}
+  .geno-row{grid-template-columns:1fr 140px 42px}
+  .toolbar input[type=search]{min-width:120px}
+  nav{border-radius:var(--r-card)}
+  .batch-defaults{grid-template-columns:1fr}
+  .apply-bar{grid-template-columns:1fr}
+}
+
+/* ============================ print: plain paper ============================ */
+@media print{
+  :root{
+    --bg:#fff;--surface:#fff;--surface-2:#fff;
+    --line:#999;--line-2:#bbb;
+    --text:#000;--text-2:#333;--text-3:#555;
+    --row-hover:transparent;
+  }
+  header.top,nav,.toolbar,.segbar,.no-print,footer,.savebar,.top-actions{display:none!important}
+  main{max-width:none;padding:0}
+  .panel,.card,.cage-card,.room-card{border:1px solid #aaa;break-inside:avoid}
+  .modal-bg{display:none!important}
+  .pane{display:block!important}
+}
+
+</style>
+<link charset="UTF-8" href="https://www.gstatic.com/_/translate_http/_/ss/k=translate_http.tr.zZZZhVqDDCw.L.W.O/am=BACAAQ/d=0/rs=AN8SPfq_aQaDM8xeUjmK6ch8oHsjcr9WBA/m=el_main_css" rel="stylesheet" type="text/css"/></head>
+<body>
+<header class="top"><div class="top-inner">
+<div class="brand"><div class="mark">MC</div><div><h1>Mouse Colony</h1><small id="headerMeta">Embedded working data</small></div></div>
+<nav id="nav">
+<button class="" data-page="dashboard">Dashboard</button>
+<button class="" data-page="mice">Mice</button>
+<button class="" data-page="batch">Batch add &amp; edit</button>
+<button class="active" data-page="cages">Cages</button>
+<button class="" data-page="breeding">Breeding &amp; Litters</button>
+<button class="" data-page="events">Events</button>
+<button class="" data-page="facilities">Protocol &amp; Rooms</button>
+<button class="" data-page="backup">Export &amp; backup</button>
+</nav>
+</div></header>
+<div class="savebar"><div class="savebar-inner">
+<span class="save-dot dirty" id="saveDot"></span><span class="save-label" id="saveLabel">Unsaved changes</span><span class="save-detail" id="saveDetail">Save the working HTML before closing or resetting Chrome.</span><span class="spacer"></span>
+<button class="btn small primary" onclick="saveWorkingHTMLToFile()">Save / Replace Working HTML…</button>
+<button class="btn small" onclick="downloadWorkingHTML()">Download Working HTML Copy</button>
+</div></div>
+<main>
+<section class="page" id="dashboard">
+<div class="toolbar">
+<div class="left"><span class="muted">Colony overview. Alerts are recalculated on every change.</span></div>
+<div class="right"><button class="btn" onclick="previewShareReport()">Preview share report</button><button class="btn" onclick="downloadShareReport()">Share report</button><button class="btn" onclick="printDashboard()">Print dashboard</button></div>
+</div>
+<div class="cards">
+<div class="card kpi"><div class="label">Active mice</div><div class="value" id="kpiMice">0</div></div>
+<div class="card kpi"><div class="label">Active cages</div><div class="value" id="kpiCages">0</div></div>
+<div class="card kpi"><div class="label">Breeding / Pregnant</div><div class="value" id="kpiBreeding">0 / 0</div></div>
+<div class="card kpi"><div class="label">Unweaned litters</div><div class="value" id="kpiLitters">0</div></div>
+<div class="card kpi"><div class="label">Open Vet Care</div><div class="value" id="kpiVet">0</div></div>
+</div>
+<div class="panel"><h2>Colony alerts</h2><div class="panel-body" id="alerts"></div></div>
+<div class="panel"><h2>Room capacity &amp; cage rules</h2><div class="panel-body"><div class="room-grid" id="roomSummary"></div></div></div>
+<div class="panel"><h2>Current cages</h2><div class="panel-body"><div class="cage-grid" id="dashboardCages"></div></div></div>
+</section>
+<section class="page" id="mice">
+<div class="toolbar">
+<div class="left"><input id="mouseSearch" placeholder="Search ID, ear punch, strain, genotype, cage…" type="search"/><select id="mouseStatus"><option value="">All status</option><option>Active</option><option>Breeding</option><option>Dead</option><option>Sacrificed</option></select></div>
+<div class="right"><button class="btn small" id="miceSortReset" onclick="miceSortReset()" style="display:none">Reset order</button><button class="btn primary" onclick="openMouseModal()">+ Add mouse</button></div>
+</div>
+<div class="panel"><div class="table-wrap"><table><thead><tr>
+<th>Mouse ID</th><th>Ear Punch</th><th>Strain / Genotype</th><th class="sortable" id="thSex" onclick="miceSort('sex')">Sex</th><th>Cage</th><th>Room</th><th class="sortable" id="thAge" onclick="miceSort('age')">DOB / Age</th><th>Status</th><th>Protocol</th><th>Notes</th><th>Actions</th>
+</tr></thead><tbody id="miceBody"></tbody></table></div></div>
+</section>
+<section class="page" id="batch">
+<div class="segbar" id="batchSeg">
+<button class="seg" data-pane="batchAddPane" type="button">Add new mice</button>
+<button class="seg active" data-pane="batchEditPane" type="button">Edit existing mice</button>
+</div>
+<div class="pane" id="batchAddPane">
+<div class="toolbar">
+<div class="left"><span class="muted">Table entry for a whole cohort. Nothing is written to the colony until you commit.</span></div>
+<div class="right">
+<button class="btn" onclick="openBulkCageModal()">+ Sequential cages</button>
+<button class="btn" onclick="openCageModal()">+ New cage</button>
+<button class="btn" onclick="batchAddRows(5)">+ 5 rows</button>
+<button class="btn" onclick="batchAddRows(1)">+ 1 row</button>
+<button class="btn primary" disabled="" id="batchCommit" onclick="batchCommit()">Add 0 mice</button>
+</div>
+</div>
+<div class="panel"><h2>Row defaults</h2><div class="panel-body">
+<div class="form-grid batch-defaults">
+<div class="field"><label>Strain</label><input id="bd_strain" placeholder="Locus"/></div>
+<div class="field"><label>Genotype locus</label><input id="bd_locus" placeholder="Locus"/></div>
+<div class="field"><label>Genotype status</label><select id="bd_geno"><option>Unknown</option><option>WT</option><option>Het</option><option>Hom</option></select></div>
+<div class="field"><label>Sex</label><select id="bd_sex"><option value="">—</option><option>Male</option><option>Female</option><option>Unknown</option></select></div>
+<div class="field"><label>DOB</label><input id="bd_dob" type="date"/></div>
+<div class="field"><label>Ear punch</label><input id="bd_ear" value="NC"/></div>
+<div class="field"><label>Destination cage</label><select id="bd_cage"></select></div>
+<div class="field"><label>Status</label><select id="bd_status"><option>Active</option><option>Breeding</option></select></div>
+<div class="field"><label>Protocol No. (applies to all)</label><input id="bd_protocol"/></div>
+</div>
+<div class="inline-actions">
+<button class="btn small" onclick="batchApplyDefaults(false)">Fill empty cells</button>
+<button class="btn small" onclick="batchApplyDefaults(true)">Overwrite all rows</button>
+<button class="btn small" onclick="batchRenumber(true)">Renumber all IDs</button>
+<button class="btn small danger" onclick="batchClear()">Clear grid</button>
+</div>
+<div class="help" style="margin-top:10px">Defaults are applied to newly created rows. Use <strong>Fill empty cells</strong> to backfill rows you already started, or <strong>Overwrite all rows</strong> to push a changed default through the whole cohort.</div>
+</div></div>
+<div class="panel"><h2>Cohort grid</h2>
+<div class="table-wrap"><table class="batch"><thead><tr>
+<th class="rowno">#</th><th>Mouse ID</th><th>Ear</th><th>Strain</th><th>Sex</th><th>Locus</th><th>Genotype</th><th>DOB</th><th>Destination cage</th><th>Status</th><th>Notes</th><th></th>
+</tr></thead><tbody id="batchBody"></tbody></table></div>
+<div class="panel-body"><div id="batchReport"><div class="muted">No rows yet.</div></div></div>
+</div>
+<div class="panel"><h2>Paste from Excel</h2><div class="panel-body">
+<div class="help">Select a block of cells in Excel, copy, and paste here. Columns are read left to right in this order; trailing columns may be omitted and a header row is skipped automatically.</div>
+<div class="colmap">1 Mouse ID · 2 Ear punch · 3 Strain · 4 Sex · 5 Locus · 6 Genotype · 7 DOB · 8 Cage barcode · 9 Status · 10 Notes</div>
+<textarea id="batchPaste" placeholder="001	NC	StrainName	M	Locus	Hom	2026-01-15	#0000000001
+002	L1	StrainName	F	Locus	Het	2026-01-15	#0000000001"></textarea>
+<div class="inline-actions"><button class="btn" onclick="batchParsePaste()">Parse into grid</button><button class="btn small ghost" onclick="document.getElementById('batchPaste').value=''">Clear box</button></div>
+<div class="help" style="margin-top:10px">Sex accepts M / F / Male / Female / 雄 / 雌. Genotype accepts WT / Het / Hom / +/+ / +/- / -/-. Dates accept YYYY-MM-DD or M/D/YYYY. Cage barcodes match with or without the leading <code>#</code>. Blank cells fall back to the row defaults above.</div>
+</div></div>
+</div>
+<div class="pane active" id="batchEditPane">
+<div class="toolbar">
+<div class="left"><span class="muted">Drag a box over the ID column to select rows. Shift or ⌘ adds to the selection.</span></div>
+<div class="right">
+<span class="tally" id="beTally">0 pending</span>
+<button class="btn" onclick="beRevert()">Revert pending</button>
+<button class="btn primary" disabled="" id="beApply" onclick="beCommit()">Apply 0 changes</button>
+</div>
+</div>
+<div class="panel"><h2>Filter</h2><div class="panel-body">
+<div class="filterbar">
+<div class="field"><label>Search</label><input id="be_q" placeholder="ID, ear, strain, genotype, notes…" type="search"/></div>
+<div class="field"><label>Status</label><select id="be_fstatus"><option value="">All status</option><option>Active</option><option>Breeding</option><option>Dead</option><option>Sacrificed</option></select></div>
+<div class="field"><label>Strain</label><select id="be_fstrain"></select></div>
+<div class="field"><label>Room</label><select id="be_froom"></select></div>
+<div class="field"><label>Cage</label><select id="be_fcage"></select></div>
+<div class="field"><label>Genotype</label><select id="be_fgeno"><option value="">Any</option><option value="__none">Not entered</option><option>Unknown</option><option>WT</option><option>Het</option><option>Hom</option></select></div>
+</div>
+<div class="inline-actions">
+<button class="btn small" onclick="beSelectShown(true)">Select all shown</button>
+<button class="btn small" onclick="beSelectShown(false)">Clear selection</button>
+<button class="btn small ghost" onclick="beClearFilters()">Reset filters</button>
+<span class="tally" id="beSelTally">12 shown • 0 selected</span>
+</div>
+</div></div>
+<div class="panel"><h2>Apply one field to the selected mice</h2><div class="panel-body">
+<div class="apply-bar">
+<div class="field"><label>Field</label><select id="be_field" onchange="beRenderValueBox()">
+<option value="setLocus">Genotype: set locus</option>
+<option value="rmLocus">Genotype: remove locus</option>
+<option value="clearGeno">Genotype: clear to strain default</option>
+<option value="status">Status</option>
+<option value="sex">Sex</option>
+<option value="strain">Strain</option>
+<option value="ear">Ear punch</option>
+<option value="dob">DOB</option>
+<option value="cage">Cage</option>
+<option value="protocol">Protocol No.</option>
+<option value="notes">Notes</option>
+</select></div>
+<div id="beValueBox"></div>
+<div class="field"><button class="btn" onclick="beApplyField()">Apply to selected</button></div>
+</div>
+<div class="help" style="margin-top:12px"><strong>Set locus</strong> adds or updates one locus and leaves any other loci on that mouse untouched, which is what you want when genotyping results come back. <strong>Remove locus</strong> deletes only the named locus.</div>
+</div></div>
+<div class="panel"><h2>Mice</h2>
+<div class="table-wrap be-grid" id="beGridWrap"><div id="beMarquee"></div><table class="editgrid"><thead><tr>
+<th class="chkcell"><input class="chk" id="beAllChk" onclick="beToggleAll(this.checked)" type="checkbox"/></th>
+<th>Mouse ID</th><th>Ear</th><th>Strain</th><th>Sex</th><th>Genotype (locus: status)</th><th>DOB</th><th>Cage</th><th>Status</th><th>Protocol</th><th>Notes</th>
+</tr></thead><tbody id="beBody"></tbody></table></div>
+<div class="panel-body"><div id="beReport"><div class="muted">No pending changes. Edit cells directly, or select mice and use the field applier above.</div></div></div>
+</div>
+</div>
+</section>
+<section class="page active" id="cages">
+<div class="toolbar"><div class="left"><input id="cageSearch" placeholder="Search cage, room, type…" type="search"/></div><div class="right"><button class="btn" onclick="openBulkCageModal()">+ Sequential cages</button><button class="btn primary" onclick="openCageModal()">+ Add cage</button></div></div>
+<div class="cage-grid" id="cageGrid"></div>
+</section>
+<section class="page" id="breeding">
+<div class="toolbar"><div class="left"><span class="muted">Pregnancy → litter → weaning stays linked to the breeding record.</span></div><div class="right"><button class="btn primary" onclick="openBreedingModal()">+ New breeding setup</button></div></div>
+<div class="panel"><h2>Active breeding cages</h2><div class="panel-body"><div class="cage-grid" id="breedingGrid"></div></div></div>
+<div class="panel"><h2>Litters</h2><div class="table-wrap"><table><thead><tr>
+<th>Litter</th><th>Breeding cage</th><th>DOB</th><th>Age</th><th>Weaning window</th><th>Pups</th><th>Status</th><th>Notes</th><th>Actions</th>
+</tr></thead><tbody id="litterBody"></tbody></table></div></div>
+</section>
+<section class="page" id="events">
+<div class="toolbar">
+<div class="left"><input id="eventSearch" placeholder="Search events…" type="search"/><select id="eventType"></select></div>
+<div class="right"><button class="btn primary" onclick="openEventModal()">+ Add event</button><button class="btn" onclick="openVetEventModal()">+ Vet Care – New Health Report</button></div>
+</div>
+<div class="panel"><div class="table-wrap"><table><thead><tr>
+<th>Date</th><th>Type</th><th>Status</th><th>Mouse(s)</th><th>Cage</th><th>Location</th><th>Details</th><th>Actions</th>
+</tr></thead><tbody id="eventsBody"></tbody></table></div></div>
+</section>
+<section class="page" id="facilities">
+<div class="panel"><h2>Animal protocol</h2><div class="panel-body"><div class="form-grid">
+<div class="field"><label>Default Protocol No.</label><input id="protocolSetting"/></div>
+<div class="field"><label>Database title</label><input id="labSetting"/></div>
+</div><div class="actions"><button class="btn primary" onclick="saveSettings()">Save settings</button></div></div></div>
+<div class="panel"><h2>Rooms</h2><div class="panel-body"><div class="room-grid" id="roomSettings"></div></div></div>
+<div class="notice">
+<strong>Configured housing rules:</strong><br/>
+Per-room cage capacity and per-cage sex limits are set in Rooms above; the example ships with Room A (max 4 adult males / 5 adult females per cage) and Room B (max 5 adults per cage).<br/>
+Unweaned pups remain represented by their litter record and are not counted as adult cage occupants until weaning. After a litter is recorded, the system alerts you if the breeding male is still in that cage.
+</div>
+<div class="panel"><h2>Strains &amp; default genotype</h2><div class="panel-body">
+<div class="help">A line kept homozygous carries the same genotype in every animal, so there is no need to retype it per mouse. Set the default here and leave the per-mouse genotype blank: it is inherited and shown with a <span class="from-strain">from strain</span> marker. Record a per-mouse genotype only when that animal actually differs, for example a Het littermate from a segregating cross.</div>
+<div class="table-wrap"><table><thead><tr>
+<th>Strain</th><th>Default genotype (locus: status)</th><th>Mice</th><th>Own genotype</th><th>Inheriting</th><th></th>
+</tr></thead><tbody id="strainBody"></tbody></table></div>
+<div class="inline-actions">
+<input id="newStrainName" placeholder="New strain name"/>
+<button class="btn" onclick="addStrain()">Add strain</button>
+<button class="btn" onclick="tidyGenotypes()">Collapse redundant genotypes</button>
+</div>
+</div></div>
+</section>
+<section class="page" id="backup">
+<div class="panel"><h2>Shareable colony report</h2><div class="panel-body">
+<div class="inline-actions" style="margin-top:0">
+<button class="btn primary" onclick="downloadShareReport()">Download share report (.html)</button>
+<button class="btn" onclick="previewShareReport()">Preview in a new tab</button>
+</div>
+<div class="help" style="margin-top:12px">A read-only, good-looking snapshot of the dashboard. Every style is written inline and every colour is a literal hex value, with no script and no external requests, so it renders the same offline as online.
+<br/><br/><strong>To send it, pick whichever fits:</strong>
+<br/><strong>1. Attach the file.</strong> The recipient clicks it and it opens in their browser looking exactly as intended. This is the reliable route.
+<br/><strong>2. Paste it into the email body.</strong> Open the file in Chrome or Safari, select all, copy, then paste into Gmail, Outlook or Apple Mail. The inlined styles travel with the paste, so colours and layout survive in the message preview.
+<br/><br/><strong>What will not survive:</strong> the Nunito typeface is not embedded, so a reader without it installed sees Avenir Next or Helvetica instead. Outlook on Windows uses the Word rendering engine and will square off the rounded corners. Both degrade to something still perfectly readable.</div>
+</div></div>
+<div class="panel"><h2>How saving works</h2><div class="panel-body">
+<div class="notice"><strong>Source of truth:</strong> the current colony data is embedded directly inside this working HTML. Chrome localStorage, IndexedDB, cookies, and cache are not used. After editing, save a new working HTML and replace the copy in your locally synced synced cloud folder. The next time you open that file, the saved data loads automatically—even after Chrome has been completely reset.</div>
+<div class="sep"></div>
+<div class="help"><strong>The two save buttons live in the bar at the top of every page.</strong> in desktop Chrome/Edge, “Save / Replace Working HTML…” opens a normal file-save dialog. Choose your synced cloud <code>Mouse Colony</code> folder and overwrite the working HTML. If the browser does not support that picker, the button falls back to a normal download.</div>
+</div></div>
+<div class="panel"><h2>Backup, archive &amp; sharing</h2><div class="panel-body">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button class="btn primary" onclick="downloadJSON()">Export JSON Backup</button>
+<label class="btn">Import JSON Backup<input accept=".json,application/json" hidden="" id="jsonImport" type="file"/></label>
+<button class="btn primary" onclick="exportExcelWorkbook()">Export Excel Workbook (.xlsx)</button>
+<button class="btn" onclick="exportSnapshotHTML()">Export Shareable Snapshot HTML</button>
+<button class="btn" onclick="exportMiceCSV()">Export Mice CSV</button>
+<button class="btn" onclick="exportCagesCSV()">Export Cages CSV</button>
+<button class="btn" onclick="exportEventsCSV()">Export Events CSV</button>
+<button class="btn danger" onclick="resetData()">Reset to embedded starting data</button>
+</div>
+<div class="sep"></div>
+<div class="help"><strong>JSON</strong> is the recovery backup. <strong>Excel</strong> creates a real multi-sheet <code>.xlsx</code> workbook with Mice, Genotypes, Cages, Breeding, Litters, and Events. <strong>Snapshot HTML</strong> is a static read-only file intended for synced cloud sharing; it contains no browser database and does not need your working JSON.</div>
+</div></div>
+</section>
+</main>
+<footer>Mouse Colony v2.0 • embedded-data working HTML • no browser storage</footer>
+<!-- Mouse modal -->
+<div class="modal-bg" id="mouseModal"><div class="modal"><header><h3 id="mouseModalTitle">Mouse</h3><button class="btn small" onclick="closeModal('mouseModal')" type="button">Close</button></header>
+<form id="mouseForm"><input id="m_uid" type="hidden" value="m-6"/><div class="form-grid">
+<div class="field"><label>Mouse ID *</label><input id="m_no" placeholder="001" required=""/></div>
+<div class="field"><label>Ear Punch</label><input id="m_ear" placeholder="NC / L1 / R1 / L1R1 …"/></div>
+<div class="field"><label>Strain *</label><input id="m_strain" placeholder="e.g. C57BL/6J, B6.Cg-Tg(...) …" required=""/></div>
+<div class="field"><label>Sex</label><select id="m_sex"><option value="">—</option><option>Male</option><option>Female</option><option>Unknown</option></select></div>
+<div class="field full"><label>Genotype loci</label><div class="geno-list" id="genoList"></div><button class="btn small" onclick="addGenoRow()" type="button">+ Add locus</button></div>
+<div class="field"><label>Current cage *</label><select id="m_cage" required=""></select></div>
+<div class="field"><label>Protocol No. *</label><input id="m_protocol" required=""/></div>
+<div class="field"><label>DOB</label><input id="m_dob" type="date"/></div>
+<div class="field"><label>Generation</label><input id="m_generation"/></div>
+<div class="field"><label>Status</label><select id="m_status"><option>Active</option><option>Breeding</option><option>Dead</option><option>Sacrificed</option></select></div>
+<div class="field"><label>Sire ID</label><input id="m_sire"/></div>
+<div class="field"><label>Dam ID</label><input id="m_dam"/></div>
+<div class="field full"><label>Notes</label><textarea id="m_notes" rows="3"></textarea></div>
+</div><div class="actions"><button class="btn" onclick="closeModal('mouseModal')" type="button">Cancel</button><button class="btn primary">Save mouse</button></div></form>
+</div></div>
+<!-- Cage modal -->
+<div class="modal-bg" id="cageModal"><div class="modal"><header><h3 id="cageModalTitle">Cage</h3><button class="btn small" onclick="closeModal('cageModal')" type="button">Close</button></header>
+<form id="cageForm"><input id="c_id" type="hidden" value="c-1790706546703"/><div class="form-grid">
+<div class="field"><label>Cage barcode *</label><input id="c_barcode" required=""/></div>
+<div class="field"><label>Cage type *</label><select id="c_type"><option>Holding</option><option>Breeding</option><option>Weaning</option><option>Experimental</option><option>Quarantine</option><option>Vet Care</option><option>Other</option></select></div>
+<div class="field"><label>Room *</label><select id="c_room" required=""></select></div>
+<div class="field"><label>Protocol No.</label><input id="c_protocol"/></div>
+<div class="field"><label>Biosafety</label><input id="c_biosafety" readonly=""/></div>
+<div class="field full"><label>Notes</label><textarea id="c_notes" rows="3"></textarea></div>
+</div><div class="actions"><button class="btn" onclick="closeModal('cageModal')" type="button">Cancel</button><button class="btn primary">Save cage</button></div></form>
+</div></div>
+<!-- Sequential cage creation -->
+<div class="modal-bg" id="bulkCageModal"><div class="modal"><header><h3>Add a run of sequential cages</h3><button class="btn small" onclick="closeModal('bulkCageModal')" type="button">Close</button></header>
+<form id="bulkCageForm"><div class="form-grid">
+<div class="field"><label>Start barcode *</label><input id="bc_start" required=""/></div>
+<div class="field"><label>How many *</label><input id="bc_count" max="200" min="1" required="" type="number" value="6"/></div>
+<div class="field"><label>Room *</label><select id="bc_room" required=""></select></div>
+<div class="field"><label>Cage type *</label><select id="bc_type"><option>Holding</option><option>Breeding</option><option>Weaning</option><option>Experimental</option><option>Quarantine</option><option>Vet Care</option><option>Other</option></select></div>
+<div class="field"><label>Protocol No.</label><input id="bc_protocol"/></div>
+<div class="field"><label>Biosafety</label><input id="bc_biosafety" readonly=""/></div>
+<div class="field full"><label>Notes (applied to every cage)</label><input id="bc_notes"/></div>
+</div>
+<div class="notice" id="bcPreview" style="margin-top:14px"></div>
+<div class="actions"><button class="btn" onclick="closeModal('bulkCageModal')" type="button">Cancel</button><button class="btn primary" id="bcSubmit">Create cages</button></div>
+</form></div></div>
+<!-- Breeding modal -->
+<div class="modal-bg" id="breedingModal"><div class="modal"><header><h3>New breeding setup</h3><button class="btn small" onclick="closeModal('breedingModal')" type="button">Close</button></header>
+<form id="breedingForm"><div class="form-grid">
+<div class="field"><label>Breeding cage *</label><select id="b_cage" required=""></select></div>
+<div class="field"><label>Setup date *</label><input id="b_date" required="" type="date"/></div>
+<div class="field full"><label>Male(s)</label><select id="b_males" multiple="" size="5"></select></div>
+<div class="field full"><label>Female(s)</label><select id="b_females" multiple="" size="5"></select></div>
+<div class="field full"><label>Notes</label><textarea id="b_notes" rows="3"></textarea></div>
+</div><div class="actions"><button class="btn" onclick="closeModal('breedingModal')" type="button">Cancel</button><button class="btn primary">Start breeding</button></div></form>
+</div></div>
+<!-- Pregnancy -->
+<div class="modal-bg" id="pregnancyModal"><div class="modal"><header><h3>Mark pregnancy</h3><button class="btn small" onclick="closeModal('pregnancyModal')" type="button">Close</button></header>
+<form id="pregnancyForm"><input id="p_breeding" type="hidden"/><div class="form-grid">
+<div class="field"><label>Observed / recorded date *</label><input id="p_date" required="" type="date"/></div>
+<div class="field full"><label>Notes</label><textarea id="p_notes" rows="3"></textarea></div>
+</div><div class="actions"><button class="btn" onclick="closeModal('pregnancyModal')" type="button">Cancel</button><button class="btn primary">Mark Pregnant</button></div></form>
+</div></div>
+<!-- Litter -->
+<div class="modal-bg" id="litterModal"><div class="modal"><header><h3>Record litter / newborn pups</h3><button class="btn small" onclick="closeModal('litterModal')" type="button">Close</button></header>
+<form id="litterForm"><input id="l_breeding" type="hidden"/><div class="form-grid">
+<div class="field"><label>Litter DOB *</label><input id="l_dob" required="" type="date"/></div>
+<div class="field"><label>Total pups</label><input id="l_total" min="0" type="number"/></div>
+<div class="field"><label>Male pups (optional)</label><input id="l_male" min="0" type="number"/></div>
+<div class="field"><label>Female pups (optional)</label><input id="l_female" min="0" type="number"/></div>
+<div class="field full"><label>Notes</label><textarea id="l_notes" rows="3"></textarea></div>
+</div><div class="actions"><button class="btn" onclick="closeModal('litterModal')" type="button">Cancel</button><button class="btn primary">Save litter</button></div></form>
+</div></div>
+<!-- Wean Wizard -->
+<div class="modal-bg" id="weanWizard"><div class="modal"><header><h3>Wean Litter Wizard</h3><button class="btn small" onclick="closeModal('weanWizard')" type="button">Close</button></header>
+<form id="weanForm"><input id="w_litter" type="hidden"/><div class="form-grid">
+<div class="field"><label>Weaning date *</label><input id="w_date" required="" type="date"/></div>
+<div class="field"><label>Strain for pups *</label><input id="w_strain" required=""/></div>
+<div class="field"><label>Male pups *</label><input id="w_males" min="0" required="" type="number"/></div>
+<div class="field"><label>Female pups *</label><input id="w_females" min="0" required="" type="number"/></div>
+<div class="field"><label>Unknown-sex pups</label><input id="w_unknown" min="0" type="number" value="0"/></div>
+<div class="field"><label>Default ear punch</label><input id="w_ear" value="NC"/></div>
+<div class="field full"><div class="wizard-box"><strong>Male destination</strong><div class="form-grid" style="margin-top:9px">
+<div class="field"><label>Existing cage</label><select id="w_maleCage"></select></div>
+<div class="field"><label>Or create new cage barcode</label><input id="w_newMaleCage" placeholder="Leave blank to use existing"/></div>
+<div class="field"><label>Room for new cage</label><select id="w_newMaleRoom"></select></div>
+</div></div></div>
+<div class="field full"><div class="wizard-box"><strong>Female destination</strong><div class="form-grid" style="margin-top:9px">
+<div class="field"><label>Existing cage</label><select id="w_femaleCage"></select></div>
+<div class="field"><label>Or create new cage barcode</label><input id="w_newFemaleCage" placeholder="Leave blank to use existing"/></div>
+<div class="field"><label>Room for new cage</label><select id="w_newFemaleRoom"></select></div>
+</div></div></div>
+<div class="field full"><label>Genotype template</label><div class="help">New pups are created as individual mouse records with genotype status “Unknown”. You can edit each mouse later after genotyping.</div></div>
+<div class="field full"><label>Notes</label><textarea id="w_notes" rows="3"></textarea></div>
+</div>
+<div class="notice" id="weanPreview"></div>
+<div class="actions"><button class="btn" onclick="closeModal('weanWizard')" type="button">Cancel</button><button class="btn primary">Create pups &amp; record weaning</button></div>
+</form></div></div>
+<!-- Move mouse -->
+<div class="modal-bg" id="moveModal"><div class="modal"><header><h3>Move mouse</h3><button class="btn small" onclick="closeModal('moveModal')" type="button">Close</button></header>
+<form id="moveForm"><input id="mv_uid" type="hidden"/><div class="form-grid">
+<div class="field full"><label>Destination cage *</label><select id="mv_cage" required=""></select></div>
+<div class="field"><label>Move date *</label><input id="mv_date" required="" type="date"/></div>
+<div class="field full"><label>Notes</label><textarea id="mv_notes" rows="3"></textarea></div>
+</div><div class="notice" id="moveCapacityNote"></div><div class="actions"><button class="btn" onclick="closeModal('moveModal')" type="button">Cancel</button><button class="btn primary">Move</button></div></form>
+</div></div>
+<!-- Event -->
+<div class="modal-bg" id="eventModal"><div class="modal"><header><h3 id="eventModalTitle">Event</h3><button class="btn small" onclick="closeModal('eventModal')" type="button">Close</button></header>
+<form id="eventForm"><input id="e_id" type="hidden"/><div class="form-grid">
+<div class="field"><label>Date *</label><input id="e_date" required="" type="date"/></div>
+<div class="field"><label>Type *</label><select id="e_type">
+<option>note</option><option>transfer</option><option>move</option><option>breeding</option><option>pregnant</option><option>litter born</option><option>wean</option><option>genotype</option><option>treatment</option><option>sacrifice</option><option>death</option><option>Vet Care-New Health Report</option>
+</select></div>
+<div class="field"><label>Task status</label><select id="e_status"><option>Done</option><option>Open</option><option>Resolved</option></select></div>
+<div class="field"><label>Mouse(s)</label><input id="e_mouse"/></div>
+<div class="field"><label>Cage</label><input id="e_cage"/></div>
+<div class="field"><label>Location</label><input id="e_location"/></div>
+<div class="field full"><label>Details</label><textarea id="e_note" rows="4"></textarea></div>
+</div><div class="actions"><button class="btn" onclick="closeModal('eventModal')" type="button">Cancel</button><button class="btn primary">Save event</button></div></form>
+</div></div>
+<script>
+const INITIAL_STATE={"version": "2.0", "labName": "Mouse Colony", "defaultProtocolNo": "", "rooms": [{"name": "Room A", "capacity": 40, "biosafety": "ABSL-2", "cageRules": {"maleMax": 4, "femaleMax": 5, "totalMax": null}, "active": true}, {"name": "Room B", "capacity": 15, "biosafety": "ABSL-2", "cageRules": {"maleMax": null, "femaleMax": null, "totalMax": 5}, "active": true}], "mice": [], "cages": [], "breeding": [], "litters": [], "events": [], "strains": [], "source": "", "migratedOn": "", "storageMode": "embedded-html"};
+let state=clone(INITIAL_STATE);
+let DIRTY=false;
+let LAST_EXPORTED="";
+
+function clone(x){return JSON.parse(JSON.stringify(x))}
+function setDirty(v=true,detail=""){
+ DIRTY=!!v;
+ const dot=document.getElementById("saveDot"),label=document.getElementById("saveLabel"),d=document.getElementById("saveDetail");
+ if(dot)dot.className="save-dot"+(DIRTY?" dirty":"");
+ if(label)label.textContent=DIRTY?"Unsaved changes":"Working HTML is saved";
+ if(d)d.textContent=detail||(DIRTY?"Save the working HTML before closing or resetting Chrome.":(LAST_EXPORTED?`Last working HTML export: ${LAST_EXPORTED}`:"Current data is embedded in this file."));
+}
+function saveState(){setDirty(true);return true}
+function applyRuntimeMode(){}
+function today(){return new Date().toISOString().slice(0,10)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function badge(s){const c=String(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");return `<span class="badge ${c}">${esc(s||"—")}</span>`}
+function activeMouse(m){return !["Dead","Sacrificed"].includes(m.status)}
+function activeCage(c){return c.status==="Active"}
+function mouse(uid){return state.mice.find(x=>x.uid===uid)}
+function cage(bc){return state.cages.find(x=>x.barcode===bc)}
+function breeding(id){return state.breeding.find(x=>x.id===id)}
+function room(name){return state.rooms.find(x=>x.name===name)}
+function occupants(bc){return state.mice.filter(m=>activeMouse(m)&&m.cageBarcode===bc)}
+function activeBreedingForCage(bc){return state.breeding.find(b=>b.cageBarcode===bc&&!b.endDate)}
+function roomUsed(name){return state.cages.filter(c=>activeCage(c)&&c.room===name).length}
+function daysBetween(a,b=today()){if(!a)return null;return Math.floor((new Date(b+"T00:00:00")-new Date(a+"T00:00:00"))/86400000)}
+function addDays(date,n){if(!date)return"";const d=new Date(date+"T00:00:00");d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function ageText(dob){const d=daysBetween(dob);if(d===null||isNaN(d))return"—";return d<70?`${d} d / ${(d/7).toFixed(1)} w`:`${(d/7).toFixed(1)} w`}
+function formatMouseNo(v){const s=String(v||"").trim();return /^\d+$/.test(s)?s.padStart(3,"0"):s}
+function nextMouseNo(){
+ let mx=0;state.mice.forEach(m=>{if(/^\d+$/.test(m.mouseNo))mx=Math.max(mx,parseInt(m.mouseNo,10))});return String(mx+1).padStart(3,"0")
+}
+/* ===== Strain-level genotype =====
+   A line kept homozygous has the same genotype in every animal, so retyping
+   it per mouse is pure duplication. The strain carries the default; a mouse
+   stores a genotype only when it actually differs, e.g. a Het littermate.
+   Empty mouse.genotypes therefore means "inherit", not "unknown". */
+function strainKey(n){return String(n||"").trim()}
+function strainDef(n){return (state.strains||[]).find(x=>strainKey(x.name)===strainKey(n))}
+function strainLoci(n){const d=strainDef(n);return d&&Array.isArray(d.loci)?d.loci.filter(x=>x.locus):[]}
+function lociText(list){return (list||[]).map(x=>`${x.locus}: ${x.status}`).join(" • ")}
+function effectiveGenotypes(m){
+ const own=(m.genotypes||[]).filter(x=>x.locus);
+ if(own.length)return{list:own,inherited:false};
+ const inh=strainLoci(m.strain);
+ return{list:inh,inherited:inh.length>0};
+}
+function genotypeText(m){
+ const e=effectiveGenotypes(m);
+ return e.list.length?lociText(e.list):"Genotype not entered";
+}
+/* a muted marker so an inherited value is never mistaken for a typed one */
+function genotypeCell(m){
+ const e=effectiveGenotypes(m);
+ if(!e.list.length)return`<span class="muted">Genotype not entered</span>`;
+ return esc(lociText(e.list))+(e.inherited?` <span class="from-strain">from strain</span>`:"");
+}
+/* Seed the registry from what is already on file: a strain whose mice all
+   share one identical genotype gets that as its default. A strain with
+   several different genotypes is segregating, so it gets no default and no
+   mouse record is touched. */
+function ensureStrains(){
+ if(!Array.isArray(state.strains))state.strains=[];
+ const made=[];
+ const sig=l=>l.map(x=>`${x.locus.toLowerCase()}:${x.status}`).sort().join("|");
+ [...new Set(state.mice.map(m=>strainKey(m.strain)).filter(Boolean))].forEach(name=>{
+  if(strainDef(name))return;
+  const mice=state.mice.filter(m=>strainKey(m.strain)===name);
+  const sigs=new Set(mice.map(m=>sig((m.genotypes||[]).filter(x=>x.locus))).filter(Boolean));
+  const loci=sigs.size===1?(mice.find(m=>(m.genotypes||[]).filter(x=>x.locus).length).genotypes||[]).filter(x=>x.locus).map(x=>({locus:x.locus,status:x.status})):[];
+  state.strains.push({name,loci,notes:""});
+  made.push(loci.length?`strain ${name} default set to ${lociText(loci)}`:`strain ${name} registered`);
+ });
+ if(made.length)AUTO_CHANGES=AUTO_CHANGES.concat(made);
+ return made;
+}
+function roomRuleText(r){
+ if(!r)return"";
+ const rules=r.cageRules||{};
+ if(rules.totalMax)return`≤ ${rules.totalMax} adult mice total / cage`;
+ return`♂ ≤ ${rules.maleMax} / cage • ♀ ≤ ${rules.femaleMax} / cage`;
+}
+function cageCounts(bc){
+ const occ=occupants(bc);return{male:occ.filter(m=>m.sex==="Male").length,female:occ.filter(m=>m.sex==="Female").length,unknown:occ.filter(m=>!["Male","Female"].includes(m.sex)).length,total:occ.length}
+}
+function cageCapacityCheck(bc, extraMouse=null){
+ const c=cage(bc);if(!c)return{ok:false,text:"Destination cage not found."};
+ const r=room(c.room);if(!r)return{ok:false,text:"Room configuration not found."};
+ const counts=cageCounts(bc);
+ if(extraMouse){counts.total++; if(extraMouse.sex==="Male")counts.male++; else if(extraMouse.sex==="Female")counts.female++; else counts.unknown++}
+ const rules=r.cageRules||{};let ok=true,parts=[];
+ if(rules.totalMax){ok=counts.total<=rules.totalMax;parts.push(`${counts.total}/${rules.totalMax} total`)}
+ else{
+  if(rules.maleMax!=null){const x=counts.male<=rules.maleMax;ok=ok&&x;parts.push(`♂ ${counts.male}/${rules.maleMax}`)}
+  if(rules.femaleMax!=null){const x=counts.female<=rules.femaleMax;ok=ok&&x;parts.push(`♀ ${counts.female}/${rules.femaleMax}`)}
+  if(counts.unknown)parts.push(`Unknown sex ${counts.unknown}`)
+ }
+ return{ok,text:`${c.room}: ${parts.join(" • ")}`}
+}
+function cageCapacityForEditedMouse(bc,newSex,excludeUid=""){
+ const c=cage(bc);if(!c)return{ok:false,text:"Destination cage not found."};
+ const r=room(c.room);if(!r)return{ok:false,text:"Room configuration not found."};
+ const occ=state.mice.filter(m=>activeMouse(m)&&m.cageBarcode===bc&&m.uid!==excludeUid);
+ const counts={male:occ.filter(m=>m.sex==="Male").length,female:occ.filter(m=>m.sex==="Female").length,unknown:occ.filter(m=>!["Male","Female"].includes(m.sex)).length,total:occ.length};
+ counts.total++;if(newSex==="Male")counts.male++;else if(newSex==="Female")counts.female++;else counts.unknown++;
+ const rules=r.cageRules||{};let ok=true,parts=[];
+ if(rules.totalMax){ok=counts.total<=rules.totalMax;parts.push(`${counts.total}/${rules.totalMax} total`)}
+ else{ok=counts.male<=rules.maleMax&&counts.female<=rules.femaleMax;parts.push(`♂ ${counts.male}/${rules.maleMax}`,`♀ ${counts.female}/${rules.femaleMax}`);if(counts.unknown)parts.push(`Unknown sex ${counts.unknown}`)}
+ return{ok,text:`${c.room}: ${parts.join(" • ")}`}
+}
+function canAddCageToRoom(roomName){
+ const r=room(roomName);if(!r)return{ok:false,text:"Room not found."};const used=roomUsed(roomName);return{ok:used<r.capacity,text:`${roomName}: ${used}/${r.capacity} active cages`}
+}
+function addEvent(obj){
+ state.events.push({id:"e-"+Date.now()+"-"+Math.random().toString(16).slice(2,6),date:obj.date||today(),type:String(obj.type||"note"),taskStatus:obj.taskStatus||((String(obj.type).toLowerCase().includes("vet care"))?"Open":"Done"),mouseNo:obj.mouseNo||"",cageBarcode:obj.cageBarcode||"",location:obj.location||"",note:obj.note||"",source:obj.source||"Local app"})
+}
+
+document.getElementById("nav")?.addEventListener("click",e=>{if(!e.target.dataset.page)return;document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));e.target.classList.add("active");document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById(e.target.dataset.page).classList.add("active");renderAll()})
+;["mouseSearch","mouseStatus","cageSearch","eventSearch","eventType"].forEach(id=>{const el=document.getElementById(id);if(el){el.addEventListener("input",renderAll);el.addEventListener("change",renderAll)}})
+
+function renderAll(){ensureStrains();syncBreeding();renderHeader();renderDashboard();renderMice();renderCages();renderBreeding();renderEvents();renderFacilities();renderBatch();renderBulkEdit();populateSelectors()}
+function renderHeader(){
+ document.querySelector(".brand h1").textContent=state.labName||"Mouse Colony";
+ document.title=(state.labName||"Mouse Colony")+" v2.0";
+ document.getElementById("headerMeta").textContent=`Protocol #${state.defaultProtocolNo||"not set"} • Embedded working data`;
+}
+function renderDashboard(){
+ const am=state.mice.filter(activeMouse),ac=state.cages.filter(activeCage),ab=state.breeding.filter(b=>!b.endDate),preg=ab.filter(b=>b.status==="Pregnant"),ul=state.litters.filter(l=>!l.weanedDate),vet=state.events.filter(e=>e.type==="Vet Care-New Health Report"&&e.taskStatus==="Open");
+ document.getElementById("kpiMice").textContent=am.length;document.getElementById("kpiCages").textContent=ac.length;document.getElementById("kpiBreeding").textContent=`${ab.length} / ${preg.length}`;document.getElementById("kpiLitters").textContent=ul.length;document.getElementById("kpiVet").textContent=vet.length;
+ let alerts=[];
+ vet.forEach(e=>alerts.push({kind:"vet",text:`Vet Care – New Health Report OPEN (${e.date})${e.cageBarcode?` • Cage ${e.cageBarcode}`:""}${e.mouseNo?` • Mouse ${e.mouseNo}`:""}: ${e.note||"Action required."}`}));
+ state.rooms.forEach(r=>{const used=roomUsed(r.name);if(used>r.capacity)alerts.push({kind:"red",text:`${r.name}: room cage capacity exceeded (${used}/${r.capacity}).`})});
+ ac.forEach(c=>{const check=cageCapacityCheck(c.barcode);if(!check.ok)alerts.push({kind:"red",text:`Cage ${c.barcode} exceeds housing rule — ${check.text}.`})});
+ ul.forEach(l=>{
+  const d=daysBetween(l.dob);if(d===null)return;
+  if(d>=21&&d<=28)alerts.push({kind:"",text:`Litter ${l.id}: ${d} days old — WEANING WINDOW NOW (${addDays(l.dob,21)} to ${addDays(l.dob,28)}).`});
+  else if(d>28)alerts.push({kind:"red",text:`Litter ${l.id}: ${d} days old — weaning overdue; window ended ${addDays(l.dob,28)}.`});
+  else if(d>=18)alerts.push({kind:"",text:`Litter ${l.id}: ${d} days old — weaning begins ${addDays(l.dob,21)}.`});
+  const b=breeding(l.breedingId);
+  if(b){
+    const maleStill=b.maleUids.map(mouse).filter(Boolean).some(m=>activeMouse(m)&&m.cageBarcode===b.cageBarcode);
+    if(maleStill)alerts.push({kind:"red",text:`Litter ${l.id} recorded in cage ${b.cageBarcode}: REMOVE BREEDING MALE from the cage after birth.`});
+  }
+ });
+ document.getElementById("alerts").innerHTML=alerts.length?alerts.map(a=>`<div class="alert ${a.kind||""}">${esc(a.text)}</div>`).join(""):`<div class="muted">No automatic alerts.</div>`;
+ document.getElementById("roomSummary").innerHTML=state.rooms.filter(r=>r.active).map(r=>{const used=roomUsed(r.name),pct=Math.min(100,used/r.capacity*100);return `<div class="room-card"><h3>${esc(r.name)} ${badge(r.biosafety)}</h3><div class="capacity">${used} / ${r.capacity}</div><div class="meta">${r.capacity-used} cage slots available<br>${esc(roomRuleText(r))}</div><div class="progress"><span style="width:${pct}%"></span></div></div>`}).join("");
+ document.getElementById("dashboardCages").innerHTML=renderCageCards(ac,false);
+}
+function renderMice(){
+ const q=(document.getElementById("mouseSearch").value||"").toLowerCase(),sf=document.getElementById("mouseStatus").value;
+ const rows=state.mice.filter(m=>{const hay=[m.mouseNo,m.earPunch,m.strain,genotypeText(m),m.sex,m.cageBarcode,m.dob,m.status,m.protocolNo,m.notes].join(" ").toLowerCase();return(!q||hay.includes(q))&&(!sf||m.status===sf)});
+ miceApplySort(rows);
+ document.getElementById("miceBody").innerHTML=rows.map(m=>{const c=cage(m.cageBarcode);return `<tr>
+ <td><span class="mouse-id">${esc(m.mouseNo)}</span></td>
+ <td><span class="ear">${esc(m.earPunch||"—")}</span></td>
+ <td><strong>${esc(m.strain||"—")}</strong><br><span class="muted">${genotypeCell(m)}</span></td>
+ <td>${badge(m.sex)}</td><td>${esc(m.cageBarcode||"—")}</td><td>${esc(c?.room||"—")}</td>
+ <td>${esc(m.dob||"—")}<br><span class="muted">${ageText(m.dob)}</span></td><td>${badge(m.status)}</td><td>#${esc(m.protocolNo)}</td><td class="note">${esc(m.notes||"")}</td>
+ <td><button class="btn small" onclick="editMouse('${m.uid}')">Edit</button>${activeMouse(m)?` <button class="btn small" onclick="openMoveModal('${m.uid}')">Move</button> <button class="btn small danger" onclick="endMouse('${m.uid}')">End</button>`:""}</td></tr>`}).join("")||`<tr><td colspan="11" class="empty">No mice found.</td></tr>`;
+}
+function renderCageCards(cs,actions=true){
+ if(!cs.length)return`<div class="empty">No active cages.</div>`;
+ return [...cs].sort((a,b)=>a.room.localeCompare(b.room)||a.barcode.localeCompare(b.barcode)).map(c=>{
+  const occ=occupants(c.barcode),b=activeBreedingForCage(c.barcode),check=cageCapacityCheck(c.barcode),lit=state.litters.filter(l=>!l.weanedDate&&breeding(l.breedingId)?.cageBarcode===c.barcode);
+  return `<div class="cage-card"><h3>${esc(c.barcode)} ${badge(c.type)} ${b?.status==="Pregnant"?badge("Pregnant"):""}</h3>
+  <div class="meta">${esc(c.room)} • ${esc(c.biosafety)} • Protocol #${esc(c.protocolNo)}<br><span class="${check.ok?"rule-ok":"rule-bad"}">${esc(check.text)}</span></div>
+  ${occ.map(m=>`<div class="mouse-chip"><div><span class="mouse-id" style="font-size:18px">${esc(m.mouseNo)}</span> ${badge(m.sex)} <span class="ear">${esc(m.earPunch||"—")}</span><br><span class="muted">${esc(m.strain||"")} • ${genotypeCell(m)}</span></div><div>${badge(m.status)}</div></div>`).join("")||`<div class="empty">No current adult mice</div>`}
+  ${lit.map(l=>`<div class="alert" style="margin-top:var(--s2)">Litter ${esc(l.id)} • DOB ${esc(l.dob)} • ${esc(String(l.totalPups||"?"))} pups${b?.maleUids.map(mouse).filter(Boolean).some(m=>activeMouse(m)&&m.cageBarcode===c.barcode)?` • <strong>REMOVE MALE</strong>`:""}</div>`).join("")}
+  ${actions?`<div class="card-actions"><button class="btn small" onclick="editCage('${c.id}')">Edit</button><button class="btn small" onclick="printCage('${encodeURIComponent(c.barcode)}')">Print card</button><button class="btn small danger" onclick="deleteCage('${c.id}')">Delete</button></div>`:""}</div>`;
+ }).join("")
+}
+function renderCages(){const q=(document.getElementById("cageSearch").value||"").toLowerCase();const cs=state.cages.filter(c=>activeCage(c)&&(!q||[c.barcode,c.room,c.type,c.protocolNo].join(" ").toLowerCase().includes(q)));document.getElementById("cageGrid").innerHTML=renderCageCards(cs,true)}
+function renderBreeding(){
+ const bs=state.breeding.filter(b=>!b.endDate).sort((a,b)=>b.startDate.localeCompare(a.startDate));
+ document.getElementById("breedingGrid").innerHTML=bs.map(b=>{
+  const ms=b.maleUids.map(mouse).filter(Boolean),fs=b.femaleUids.map(mouse).filter(Boolean),lits=state.litters.filter(l=>l.breedingId===b.id&&!l.weanedDate),maleStill=lits.length&&ms.some(m=>activeMouse(m)&&m.cageBarcode===b.cageBarcode);
+  return `<div class="cage-card"><h3>${esc(b.cageBarcode)} ${badge(b.status)} ${b.auto?badge("Auto"):""} ${maleStill?badge("REMOVE MALE"):""}</h3><div class="meta">Set up ${esc(b.startDate)} • ${esc(cage(b.cageBarcode)?.room||"")}${b.auto?" • closes itself once the sexes are separated":""}</div><p><strong>Male:</strong> ${ms.map(m=>m.mouseNo).join(", ")||"—"}<br><strong>Female:</strong> ${fs.map(m=>m.mouseNo).join(", ")||"—"}</p>${b.pregnantDate?`<p><strong>Pregnancy recorded:</strong> ${esc(b.pregnantDate)}</p>`:""}<div class="card-actions">${b.status!=="Pregnant"?`<button class="btn small" onclick="openPregnancyModal('${b.id}')">Mark pregnant</button>`:""}<button class="btn small" onclick="openLitterModal('${b.id}')">Record litter</button>${maleStill&&ms[0]?`<button class="btn small" onclick="openMoveModal('${ms[0].uid}')">Move male now</button>`:""}${b.auto?"":`<button class="btn small danger" onclick="endBreeding('${b.id}')">End breeding</button>`}</div></div>`
+ }).join("")||`<div class="empty">No active breeding cages.</div>`;
+ const ls=[...state.litters].sort((a,b)=>b.dob.localeCompare(a.dob));
+ document.getElementById("litterBody").innerHTML=ls.map(l=>{const d=daysBetween(l.dob),open=addDays(l.dob,21),close=addDays(l.dob,28);let st=l.weanedDate?"Weaned":d>28?"Overdue":d>=21?"Weaning":d>=0?"Nursing":"—";return `<tr><td><strong>${esc(l.id)}</strong></td><td>${esc(breeding(l.breedingId)?.cageBarcode||"—")}</td><td>${esc(l.dob)}</td><td>${d===null?"—":d+" d"}</td><td>${open} → ${close}</td><td>${esc(l.totalPups??"—")}</td><td>${badge(st)}</td><td class="note">${esc(l.notes||"")}${l.weanedDate?`<br>Weaned ${esc(l.weanedDate)} • ${esc(l.weanNotes||"")}`:""}</td><td>${!l.weanedDate?`<button class="btn small primary" onclick="openWeanWizard('${l.id}')">Wean Litter Wizard</button>`:""}</td></tr>`}).join("")||`<tr><td colspan="9" class="empty">No litters recorded yet.</td></tr>`;
+}
+function renderEvents(){
+ const q=(document.getElementById("eventSearch").value||"").toLowerCase(),sel=document.getElementById("eventType"),old=sel.value,types=[...new Set(state.events.map(e=>e.type))].sort();sel.innerHTML=`<option value="">All event types</option>`+types.map(t=>`<option ${t===old?"selected":""}>${esc(t)}</option>`).join("");const tf=sel.value;
+ const es=[...state.events].filter(e=>{const hay=[e.date,e.type,e.taskStatus,e.mouseNo,e.cageBarcode,e.location,e.note].join(" ").toLowerCase();return(!q||hay.includes(q))&&(!tf||e.type===tf)}).sort((a,b)=>b.date.localeCompare(a.date));
+ document.getElementById("eventsBody").innerHTML=es.map(e=>`<tr><td>${esc(e.date)}</td><td>${badge(e.type)}</td><td>${badge(e.taskStatus||"Done")}</td><td>${esc(e.mouseNo||"—")}</td><td>${esc(e.cageBarcode||"—")}</td><td>${esc(e.location||"—")}</td><td class="note">${esc(e.note||"")}</td><td>${e.type==="Vet Care-New Health Report"&&e.taskStatus==="Open"?`<button class="btn small" onclick="resolveVet('${e.id}')">Resolve</button> `:""}<button class="btn small" onclick="editEvent('${e.id}')">Edit</button> <button class="btn small danger" onclick="deleteEvent('${e.id}')">Delete</button></td></tr>`).join("")||`<tr><td colspan="8" class="empty">No events.</td></tr>`;
+}
+function renderFacilities(){
+ document.getElementById("protocolSetting").value=state.defaultProtocolNo||"";document.getElementById("labSetting").value=state.labName||"";
+ renderStrains();
+ document.getElementById("roomSettings").innerHTML=state.rooms.map(r=>{const used=roomUsed(r.name);return `<div class="room-card"><h3>${esc(r.name)} ${badge(r.biosafety)}</h3><div class="capacity">${used} / ${r.capacity}</div><div class="meta">${r.capacity-used} cage slots available<br>${esc(roomRuleText(r))}</div></div>`}).join("")
+}
+function populateSelectors(){
+ const cs=state.cages.filter(activeCage).sort((a,b)=>a.room.localeCompare(b.room)||a.barcode.localeCompare(b.barcode));const opts=cs.map(c=>`<option value="${esc(c.barcode)}">${esc(c.barcode)} • ${esc(c.type)} • ${esc(c.room)}</option>`).join("");
+ ["m_cage","mv_cage","b_cage","w_maleCage","w_femaleCage"].forEach(id=>{const el=document.getElementById(id);if(!el)return;const old=el.value;el.innerHTML=(id.startsWith("w_")?`<option value="">— choose existing cage —</option>`:"")+opts;if([...el.options].some(o=>o.value===old))el.value=old});
+ document.getElementById("b_males").innerHTML=state.mice.filter(m=>activeMouse(m)&&m.sex==="Male").map(m=>`<option value="${m.uid}">${m.mouseNo} • ${esc(m.strain)} • ${esc(m.cageBarcode)}</option>`).join("");
+ document.getElementById("b_females").innerHTML=state.mice.filter(m=>activeMouse(m)&&m.sex==="Female").map(m=>`<option value="${m.uid}">${m.mouseNo} • ${esc(m.strain)} • ${esc(m.cageBarcode)}</option>`).join("");
+ const ropts=state.rooms.filter(r=>r.active).map(r=>`<option>${esc(r.name)}</option>`).join("");["c_room","w_newMaleRoom","w_newFemaleRoom"].forEach(id=>{const el=document.getElementById(id);if(!el)return;const old=el.value;el.innerHTML=ropts;if([...el.options].some(o=>o.value===old))el.value=old});updateCageRoomMeta()
+}
+
+function closeModal(id){document.getElementById(id).classList.remove("open")}
+document.querySelectorAll(".modal-bg").forEach(x=>x.addEventListener("click",e=>{if(e.target===x)x.classList.remove("open")}))
+
+function genoRowHTML(locus="",status="Unknown"){return `<div class="geno-row"><input class="geno-locus" placeholder="Locus / gene" value="${esc(locus)}"><select class="geno-status"><option ${status==="WT"?"selected":""}>WT</option><option ${status==="Het"?"selected":""}>Het</option><option ${status==="Hom"?"selected":""}>Hom</option><option ${status==="Unknown"?"selected":""}>Unknown</option></select><button type="button" class="btn small danger" onclick="this.parentElement.remove()">×</button></div>`}
+function addGenoRow(locus="",status="Unknown"){document.getElementById("genoList").insertAdjacentHTML("beforeend",genoRowHTML(locus,status))}
+function readGenoRows(){return [...document.querySelectorAll("#genoList .geno-row")].map(r=>({locus:r.querySelector(".geno-locus").value.trim(),status:r.querySelector(".geno-status").value})).filter(x=>x.locus)}
+
+function openMouseModal(){
+ document.getElementById("mouseForm").reset();document.getElementById("m_uid").value="";document.getElementById("mouseModalTitle").textContent="Add mouse";document.getElementById("genoList").innerHTML="";addGenoRow();populateSelectors();document.getElementById("m_no").value=nextMouseNo();document.getElementById("m_protocol").value=state.defaultProtocolNo;document.getElementById("m_status").value="Active";document.getElementById("m_ear").value="NC";document.getElementById("mouseModal").classList.add("open")
+}
+function editMouse(uid){
+ const m=mouse(uid);if(!m)return;document.getElementById("mouseForm").reset();populateSelectors();document.getElementById("mouseModalTitle").textContent="Edit mouse "+m.mouseNo;document.getElementById("m_uid").value=m.uid;document.getElementById("m_no").value=m.mouseNo;document.getElementById("m_ear").value=m.earPunch||"";document.getElementById("m_strain").value=m.strain||"";document.getElementById("m_sex").value=m.sex||"";document.getElementById("genoList").innerHTML="";(m.genotypes||[]).forEach(g=>addGenoRow(g.locus,g.status));if(!(m.genotypes||[]).length)addGenoRow();document.getElementById("m_cage").value=m.cageBarcode;document.getElementById("m_protocol").value=m.protocolNo;document.getElementById("m_dob").value=m.dob||"";document.getElementById("m_generation").value=m.generation||"";document.getElementById("m_status").value=m.status||"Active";document.getElementById("m_sire").value=m.sire||"";document.getElementById("m_dam").value=m.dam||"";document.getElementById("m_notes").value=m.notes||"";document.getElementById("mouseModal").classList.add("open")
+}
+document.getElementById("mouseForm")?.addEventListener("submit",e=>{
+ e.preventDefault();const uid=document.getElementById("m_uid").value,no=formatMouseNo(document.getElementById("m_no").value);if(state.mice.some(m=>m.mouseNo===no&&m.uid!==uid)){alert("Mouse ID already exists.");return}
+ const data={mouseNo:no,earPunch:document.getElementById("m_ear").value.trim(),strain:document.getElementById("m_strain").value.trim(),genotypes:readGenoRows(),sex:document.getElementById("m_sex").value,cageBarcode:document.getElementById("m_cage").value,protocolNo:document.getElementById("m_protocol").value.trim(),dob:document.getElementById("m_dob").value,generation:document.getElementById("m_generation").value.trim(),status:document.getElementById("m_status").value,sire:document.getElementById("m_sire").value.trim(),dam:document.getElementById("m_dam").value.trim(),notes:document.getElementById("m_notes").value.trim(),autoBreeding:false,updatedAt:today()};
+ const existing=uid?mouse(uid):null;if(!existing||existing.cageBarcode!==data.cageBarcode||existing.sex!==data.sex){const check=cageCapacityForEditedMouse(data.cageBarcode,data.sex,existing?.uid||"");if(!check.ok){alert("Housing limit would be exceeded: "+check.text);return}}
+ if(existing){Object.assign(existing,data);addEvent({type:"mouse update",mouseNo:no,cageBarcode:data.cageBarcode,location:cage(data.cageBarcode)?.room||"",note:"Mouse record edited."})}else{state.mice.push({uid:"m-"+Date.now(),createdAt:today(),litterId:"",...data});addEvent({type:"new mouse",mouseNo:no,cageBarcode:data.cageBarcode,location:cage(data.cageBarcode)?.room||"",note:"New mouse added."})}
+ saveState();closeModal("mouseModal");renderAll()
+})
+
+function openCageModal(){document.getElementById("cageForm").reset();document.getElementById("c_id").value="";document.getElementById("cageModalTitle").textContent="Add cage";populateSelectors();document.getElementById("c_type").value="Holding";document.getElementById("c_protocol").value=state.defaultProtocolNo;updateCageRoomMeta();document.getElementById("cageModal").classList.add("open")}
+function editCage(id){const c=state.cages.find(x=>x.id===id);if(!c)return;document.getElementById("cageForm").reset();populateSelectors();document.getElementById("c_id").value=c.id;document.getElementById("cageModalTitle").textContent="Edit cage "+c.barcode;document.getElementById("c_barcode").value=c.barcode;document.getElementById("c_type").value=c.type;document.getElementById("c_room").value=c.room;document.getElementById("c_protocol").value=c.protocolNo;document.getElementById("c_notes").value=c.notes||"";updateCageRoomMeta();document.getElementById("cageModal").classList.add("open")}
+document.getElementById("c_room")?.addEventListener("change",updateCageRoomMeta);
+function updateCageRoomMeta(){const r=room(document.getElementById("c_room").value);document.getElementById("c_biosafety").value=r?r.biosafety:""}
+document.getElementById("cageForm")?.addEventListener("submit",e=>{
+ e.preventDefault();const id=document.getElementById("c_id").value,bc=document.getElementById("c_barcode").value.trim(),roomName=document.getElementById("c_room").value;if(state.cages.some(c=>c.barcode===bc&&c.id!==id)){alert("That cage barcode already exists.");return}
+ const rcheck=canAddCageToRoom(roomName);const existing=id?state.cages.find(c=>c.id===id):null;if((!existing||existing.room!==roomName)&&!rcheck.ok){alert("Room cage capacity reached: "+rcheck.text);return}
+ const data={barcode:bc,type:document.getElementById("c_type").value,room:roomName,biosafety:room(roomName)?.biosafety||"ABSL-2",protocolNo:document.getElementById("c_protocol").value.trim()||state.defaultProtocolNo,status:"Active",autoType:false,notes:document.getElementById("c_notes").value.trim()};
+ if(existing){const old=existing.barcode;Object.assign(existing,data);if(old!==bc){state.mice.filter(m=>m.cageBarcode===old).forEach(m=>m.cageBarcode=bc);state.breeding.filter(b=>b.cageBarcode===old).forEach(b=>b.cageBarcode=bc)}addEvent({type:"cage update",cageBarcode:bc,location:roomName,note:`Cage record updated; type=${data.type}.`})}
+ else{state.cages.push({id:"c-"+Date.now(),...data});addEvent({type:"new cage",cageBarcode:bc,location:roomName,note:`New ${data.type} cage added.`})}
+ saveState();closeModal("cageModal");renderAll()
+})
+function deleteCage(id){
+ const c=state.cages.find(x=>x.id===id);if(!c)return;const occ=occupants(c.barcode);const activeB=activeBreedingForCage(c.barcode);
+ if(occ.length){alert(`Cannot delete cage ${c.barcode}: move its ${occ.length} active mouse/mice first.`);return}
+ if(activeB){alert(`Cannot delete cage ${c.barcode}: end its active breeding record first.`);return}
+ if(!confirm(`Permanently delete empty cage ${c.barcode}? Historical event text will remain.`))return;
+ state.cages=state.cages.filter(x=>x.id!==id);addEvent({type:"cage deleted",cageBarcode:c.barcode,location:c.room,note:`Empty cage ${c.barcode} deleted from active cage records.`});saveState();renderAll()
+}
+
+function openMoveModal(uid){const m=mouse(uid);if(!m)return;populateSelectors();document.getElementById("mv_uid").value=uid;document.getElementById("mv_cage").value=m.cageBarcode;document.getElementById("mv_date").value=today();document.getElementById("mv_notes").value="";updateMoveCapacity();document.getElementById("moveModal").classList.add("open")}
+document.getElementById("mv_cage")?.addEventListener("change",updateMoveCapacity);
+function updateMoveCapacity(){const m=mouse(document.getElementById("mv_uid").value),dest=document.getElementById("mv_cage").value;if(!m||!dest)return;const same=m.cageBarcode===dest,check=same?cageCapacityCheck(dest):cageCapacityCheck(dest,{sex:m.sex});document.getElementById("moveCapacityNote").innerHTML=`<strong>${esc(check.ok?"Within limit":"LIMIT EXCEEDED")}</strong><br>${esc(check.text)}`}
+document.getElementById("moveForm")?.addEventListener("submit",e=>{
+ e.preventDefault();const m=mouse(document.getElementById("mv_uid").value),dest=document.getElementById("mv_cage").value;if(!m||!dest)return;const old=m.cageBarcode;if(old===dest){closeModal("moveModal");return}const check=cageCapacityCheck(dest,{sex:m.sex});if(!check.ok){alert("Cannot move: "+check.text);return}m.cageBarcode=dest;m.updatedAt=today();addEvent({date:document.getElementById("mv_date").value,type:"move",mouseNo:m.mouseNo,cageBarcode:dest,location:cage(dest)?.room||"",note:`Moved from cage ${old} to ${dest}. ${document.getElementById("mv_notes").value.trim()}`});saveState();closeModal("moveModal");renderAll()
+})
+function endMouse(uid){const m=mouse(uid);if(!m)return;const ans=prompt(`Type "Dead" or "Sacrificed" for mouse ${m.mouseNo}:`,"Sacrificed");if(!ans)return;const st=/^d/i.test(ans)?"Dead":"Sacrificed";m.status=st;m.updatedAt=today();addEvent({type:st.toLowerCase(),mouseNo:m.mouseNo,cageBarcode:m.cageBarcode,location:cage(m.cageBarcode)?.room||"",note:prompt("Optional note:","")||""});saveState();renderAll()}
+
+function openBreedingModal(){document.getElementById("breedingForm").reset();populateSelectors();document.getElementById("b_date").value=today();document.getElementById("breedingModal").classList.add("open")}
+document.getElementById("breedingForm")?.addEventListener("submit",e=>{
+ e.preventDefault();const bc=document.getElementById("b_cage").value;if(activeBreedingForCage(bc)){alert("This cage already has an active breeding record.");return}const sel=id=>[...document.getElementById(id).selectedOptions].map(o=>o.value),males=sel("b_males"),females=sel("b_females");if(!males.length||!females.length){alert("Select at least one male and one female.");return}
+ const c=cage(bc),r=room(c.room),future={male:males.length,female:females.length,total:males.length+females.length};let ok=true;if(r.cageRules.totalMax)ok=future.total<=r.cageRules.totalMax;else ok=future.male<=r.cageRules.maleMax&&future.female<=r.cageRules.femaleMax;if(!ok){alert(`Breeding setup exceeds ${c.room} cage rule: ${roomRuleText(r)}`);return}
+ const date=document.getElementById("b_date").value;state.breeding.push({id:"b-"+Date.now(),cageBarcode:bc,startDate:date,maleUids:males,femaleUids:females,status:"Active",pregnantDate:"",endDate:"",notes:document.getElementById("b_notes").value.trim()});c.type="Breeding";[...males,...females].forEach(uid=>{const m=mouse(uid);if(m){m.cageBarcode=bc;m.status="Breeding"}});addEvent({date,type:"breeding",mouseNo:[...males,...females].map(uid=>mouse(uid)?.mouseNo).filter(Boolean).join(", "),cageBarcode:bc,location:c.room,note:"Breeding set-up."});saveState();closeModal("breedingModal");renderAll()
+})
+function openPregnancyModal(id){document.getElementById("pregnancyForm").reset();document.getElementById("p_breeding").value=id;document.getElementById("p_date").value=today();document.getElementById("pregnancyModal").classList.add("open")}
+document.getElementById("pregnancyForm")?.addEventListener("submit",e=>{e.preventDefault();const b=breeding(document.getElementById("p_breeding").value);if(!b)return;b.status="Pregnant";b.pregnantDate=document.getElementById("p_date").value;addEvent({date:b.pregnantDate,type:"pregnant",mouseNo:b.femaleUids.map(uid=>mouse(uid)?.mouseNo).filter(Boolean).join(", "),cageBarcode:b.cageBarcode,location:cage(b.cageBarcode)?.room||"",note:`Pregnancy recorded. ${document.getElementById("p_notes").value.trim()}`});saveState();closeModal("pregnancyModal");renderAll()})
+function openLitterModal(id){document.getElementById("litterForm").reset();document.getElementById("l_breeding").value=id;document.getElementById("l_dob").value=today();document.getElementById("litterModal").classList.add("open")}
+document.getElementById("litterForm")?.addEventListener("submit",e=>{
+ e.preventDefault();const bid=document.getElementById("l_breeding").value,b=breeding(bid);if(!b)return;const dob=document.getElementById("l_dob").value,id=`L${String(state.litters.length+1).padStart(3,"0")}`,total=document.getElementById("l_total").value;state.litters.push({id,breedingId:bid,dob,totalPups:total===""?"":Number(total),malePups:document.getElementById("l_male").value===""?"":Number(document.getElementById("l_male").value),femalePups:document.getElementById("l_female").value===""?"":Number(document.getElementById("l_female").value),weanedDate:"",weanNotes:"",pupUids:[],notes:document.getElementById("l_notes").value.trim()});addEvent({date:dob,type:"litter born",cageBarcode:b.cageBarcode,location:cage(b.cageBarcode)?.room||"",note:`Litter ${id} born${total!==""?`; ${total} pups`:""}. Weaning window: ${addDays(dob,21)} to ${addDays(dob,28)}. REMOVE BREEDING MALE from cage after birth.`});saveState();closeModal("litterModal");renderAll()
+})
+function endBreeding(id){
+ const b=breeding(id);if(!b)return;
+ const occ=occupants(b.cageBarcode);
+ if(occ.some(m=>m.sex==="Male")&&occ.some(m=>m.sex==="Female")){
+  alert(`Cage ${b.cageBarcode} still holds both sexes, so a breeding record is re-opened automatically.\n\nMove the male (or the females) out first, then the record closes on its own.`);
+  return;
+ }
+ if(!confirm(`End breeding for cage ${b.cageBarcode}?`))return;b.endDate=today();b.status="Ended";b.maleUids.concat(b.femaleUids).forEach(uid=>{const m=mouse(uid);if(m&&m.status==="Breeding")m.status="Active"});addEvent({type:"breeding end",cageBarcode:b.cageBarcode,location:cage(b.cageBarcode)?.room||"",note:"Breeding record ended."});saveState();renderAll()}
+
+function openWeanWizard(litterId){
+ const l=state.litters.find(x=>x.id===litterId);if(!l)return;const b=breeding(l.breedingId),dam=mouse(b?.femaleUids?.[0]);document.getElementById("weanForm").reset();populateSelectors();document.getElementById("w_litter").value=litterId;document.getElementById("w_date").value=today();document.getElementById("w_strain").value=dam?.strain||"";document.getElementById("w_males").value=l.malePups!==""?l.malePups:0;document.getElementById("w_females").value=l.femalePups!==""?l.femalePups:0;const known=(Number(l.malePups)||0)+(Number(l.femalePups)||0);document.getElementById("w_unknown").value=l.totalPups!==""?Math.max(0,Number(l.totalPups)-known):0;document.getElementById("w_ear").value="NC";updateWeanPreview();document.getElementById("weanWizard").classList.add("open")
+}
+["w_males","w_females","w_unknown","w_maleCage","w_femaleCage","w_newMaleCage","w_newFemaleCage","w_newMaleRoom","w_newFemaleRoom"].forEach(id=>document.getElementById(id)?.addEventListener("input",updateWeanPreview));
+function updateWeanPreview(){
+ const ma=Number(document.getElementById("w_males").value||0),fe=Number(document.getElementById("w_females").value||0),un=Number(document.getElementById("w_unknown").value||0),start=nextMouseNo(),end=String(parseInt(start,10)+Math.max(0,ma+fe+un-1)).padStart(3,"0");
+ document.getElementById("weanPreview").innerHTML=`This will create <strong>${ma+fe+un}</strong> individual mouse records${ma+fe+un?` with IDs <strong>${start}–${end}</strong>`:""}. New pups will have genotype status <strong>Unknown</strong> until you edit them after genotyping.`
+}
+function createWizardCage(barcode,roomName){
+ if(!barcode)return null;if(cage(barcode)){return cage(barcode)}
+ const rcheck=canAddCageToRoom(roomName);if(!rcheck.ok)throw new Error(`Cannot create cage ${barcode}: ${rcheck.text}`);
+ const c={id:"c-"+Date.now()+"-"+Math.random().toString(16).slice(2,5),barcode,room:roomName,biosafety:room(roomName)?.biosafety||"ABSL-2",type:"Weaning",protocolNo:state.defaultProtocolNo,status:"Active",notes:"Created by Wean Litter Wizard"};state.cages.push(c);addEvent({type:"new cage",cageBarcode:barcode,location:roomName,note:"Weaning cage created by Wean Litter Wizard."});return c
+}
+function capacityForBatch(bc,sex,count){
+ const c=cage(bc);if(!c)return{ok:false,text:"Cage not found"};const counts=cageCounts(bc);const r=room(c.room),rules=r.cageRules||{};if(sex==="Male")counts.male+=count;else if(sex==="Female")counts.female+=count;else counts.unknown+=count;counts.total+=count;let ok=true,parts=[];if(rules.totalMax){ok=counts.total<=rules.totalMax;parts.push(`${counts.total}/${rules.totalMax} total`)}else{ok=counts.male<=rules.maleMax&&counts.female<=rules.femaleMax;parts.push(`♂ ${counts.male}/${rules.maleMax}`,`♀ ${counts.female}/${rules.femaleMax}`);if(counts.unknown)parts.push(`Unknown ${counts.unknown}`)}return{ok,text:`${c.room}: ${parts.join(" • ")}`}
+}
+function capacityForMixedBatch(bc,maleCount,femaleCount){
+ const c=cage(bc);if(!c)return{ok:false,text:"Cage not found"};const counts=cageCounts(bc),r=room(c.room),rules=r.cageRules||{};
+ counts.male+=maleCount;counts.female+=femaleCount;counts.total+=maleCount+femaleCount;
+ let ok=true,parts=[];if(rules.totalMax){ok=counts.total<=rules.totalMax;parts.push(`${counts.total}/${rules.totalMax} total`)}else{ok=counts.male<=rules.maleMax&&counts.female<=rules.femaleMax;parts.push(`♂ ${counts.male}/${rules.maleMax}`,`♀ ${counts.female}/${rules.femaleMax}`)}
+ return{ok,text:`${c.room}: ${parts.join(" • ")}`}
+}
+document.getElementById("weanForm")?.addEventListener("submit",e=>{
+ e.preventDefault();const l=state.litters.find(x=>x.id===document.getElementById("w_litter").value);if(!l)return;const b=breeding(l.breedingId),dam=mouse(b?.femaleUids?.[0]),sire=mouse(b?.maleUids?.[0]),ma=Number(document.getElementById("w_males").value||0),fe=Number(document.getElementById("w_females").value||0),un=Number(document.getElementById("w_unknown").value||0),strain=document.getElementById("w_strain").value.trim(),ear=document.getElementById("w_ear").value.trim()||"NC";
+ try{
+  let maleBc=document.getElementById("w_newMaleCage").value.trim()||document.getElementById("w_maleCage").value;
+  let femaleBc=document.getElementById("w_newFemaleCage").value.trim()||document.getElementById("w_femaleCage").value;
+  if(ma>0&&!maleBc)throw new Error("Choose or create a male destination cage.");
+  if(fe>0&&!femaleBc)throw new Error("Choose or create a female destination cage.");
+  if(document.getElementById("w_newMaleCage").value.trim())createWizardCage(maleBc,document.getElementById("w_newMaleRoom").value);
+  if(document.getElementById("w_newFemaleCage").value.trim())createWizardCage(femaleBc,document.getElementById("w_newFemaleRoom").value);
+  if(ma>0&&fe>0&&maleBc===femaleBc){const ck=capacityForMixedBatch(maleBc,ma,fe);if(!ck.ok)throw new Error("Destination cage limit exceeded: "+ck.text)}
+  else{
+   if(ma>0){const ck=capacityForBatch(maleBc,"Male",ma);if(!ck.ok)throw new Error("Male cage limit exceeded: "+ck.text)}
+   if(fe>0){const ck=capacityForBatch(femaleBc,"Female",fe);if(!ck.ok)throw new Error("Female cage limit exceeded: "+ck.text)}
+  }
+  if(un>0)throw new Error("Unknown-sex pups cannot be automatically assigned because cage limits depend on sex. Set sex before using the wizard.");
+  const created=[],genotypeLocus=(dam?.genotypes?.[0]?.locus||sire?.genotypes?.[0]?.locus||strain||"Genotype");
+  function addPups(n,sex,bc){for(let i=0;i<n;i++){const no=nextMouseNo(),uid="m-"+Date.now()+"-"+Math.random().toString(16).slice(2,7);state.mice.push({uid,mouseNo:no,earPunch:ear,strain,genotypes:[{locus:genotypeLocus,status:"Unknown"}],sex,status:"Active",cageBarcode:bc,protocolNo:state.defaultProtocolNo,dob:l.dob,generation:"",sire:sire?.mouseNo||"",dam:dam?.mouseNo||"",litterId:l.id,notes:`Created from litter ${l.id} by Wean Litter Wizard.`,createdAt:today(),updatedAt:today()});created.push(uid)}}
+  addPups(ma,"Male",maleBc);addPups(fe,"Female",femaleBc);
+  l.weanedDate=document.getElementById("w_date").value;l.weanNotes=document.getElementById("w_notes").value.trim();l.pupUids=created;l.malePups=ma;l.femalePups=fe;l.totalPups=ma+fe;
+  addEvent({date:l.weanedDate,type:"wean",mouseNo:created.map(uid=>mouse(uid)?.mouseNo).filter(Boolean).join(", "),cageBarcode:[maleBc,femaleBc].filter(Boolean).join(" / "),location:[maleBc,femaleBc].filter(Boolean).map(bc=>cage(bc)?.room).filter(Boolean).join(" / "),note:`Litter ${l.id} weaned. Created ${created.length} individual mouse records. ${l.weanNotes}`});
+  saveState();closeModal("weanWizard");renderAll()
+ }catch(err){alert(err.message)}
+})
+
+function openEventModal(){document.getElementById("eventForm").reset();document.getElementById("e_id").value="";document.getElementById("eventModalTitle").textContent="Add event";document.getElementById("e_date").value=today();document.getElementById("e_status").value="Done";document.getElementById("eventModal").classList.add("open")}
+function openVetEventModal(){openEventModal();document.getElementById("eventModalTitle").textContent="Vet Care – New Health Report";document.getElementById("e_type").value="Vet Care-New Health Report";document.getElementById("e_status").value="Open";document.getElementById("e_note").placeholder="Paste/summary the email, affected cage/mouse, required follow-up, etc."}
+function editEvent(id){const e=state.events.find(x=>x.id===id);if(!e)return;document.getElementById("eventForm").reset();document.getElementById("e_id").value=e.id;document.getElementById("eventModalTitle").textContent="Edit event";document.getElementById("e_date").value=e.date||"";document.getElementById("e_type").value=e.type;document.getElementById("e_status").value=e.taskStatus||"Done";document.getElementById("e_mouse").value=e.mouseNo||"";document.getElementById("e_cage").value=e.cageBarcode||"";document.getElementById("e_location").value=e.location||"";document.getElementById("e_note").value=e.note||"";document.getElementById("eventModal").classList.add("open")}
+document.getElementById("eventForm")?.addEventListener("submit",e=>{e.preventDefault();const id=document.getElementById("e_id").value,data={date:document.getElementById("e_date").value,type:document.getElementById("e_type").value,taskStatus:document.getElementById("e_status").value,mouseNo:document.getElementById("e_mouse").value.trim(),cageBarcode:document.getElementById("e_cage").value.trim(),location:document.getElementById("e_location").value.trim(),note:document.getElementById("e_note").value.trim()};if(id){Object.assign(state.events.find(x=>x.id===id),data)}else addEvent(data);saveState();closeModal("eventModal");renderAll()})
+function deleteEvent(id){const e=state.events.find(x=>x.id===id);if(!e)return;if(confirm(`Delete this event permanently?\n\n${e.date} • ${e.type}\n${e.note||""}`)){state.events=state.events.filter(x=>x.id!==id);saveState();renderAll()}}
+function resolveVet(id){const e=state.events.find(x=>x.id===id);if(!e)return;e.taskStatus="Resolved";if(!/resolved/i.test(e.note||""))e.note=(e.note?e.note+" ":"")+"Resolved "+today()+".";saveState();renderAll()}
+
+function saveSettings(){state.defaultProtocolNo=document.getElementById("protocolSetting").value.trim();state.labName=document.getElementById("labSetting").value.trim()||"Mouse Colony";saveState();renderAll()}
+
+function printCage(enc){const bc=decodeURIComponent(enc),c=cage(bc),occ=occupants(bc),b=activeBreedingForCage(bc),lits=state.litters.filter(l=>!l.weanedDate&&breeding(l.breedingId)?.cageBarcode===bc),check=cageCapacityCheck(bc),w=window.open("","_blank","width=780,height=800");w.document.write(`<html><head><title>${esc(bc)}</title><style>body{font-family:Arial;padding:28px}h1{margin-bottom:4px}table{border-collapse:collapse;width:100%;margin-top:15px}th,td{border:1px solid #999;padding:8px;text-align:left}.big{font-size:18px}.id{font-size:20px;font-weight:bold}</style></head><body><h1>Mouse Colony</h1><div class="big"><strong>Cage ${esc(bc)}</strong> • ${esc(c?.type||"")} ${b?.status==="Pregnant"?"• PREGNANT":""}</div><p>Protocol #${esc(c?.protocolNo||state.defaultProtocolNo)}<br>${esc(c?.room||"")} • ${esc(c?.biosafety||"ABSL-2")}<br>${esc(check.text)}</p><table><tr><th>Mouse ID</th><th>Ear</th><th>Sex</th><th>DOB</th><th>Strain / Genotype</th><th>Status</th></tr>${occ.map(m=>`<tr><td class="id">${esc(m.mouseNo)}</td><td>${esc(m.earPunch||"")}</td><td>${esc(m.sex)}</td><td>${esc(m.dob)}</td><td>${esc(m.strain)} • ${esc(genotypeText(m))}</td><td>${esc(m.status)}</td></tr>`).join("")}</table>${b?`<p><strong>Breeding setup:</strong> ${esc(b.startDate)}${b.pregnantDate?`<br><strong>Pregnancy recorded:</strong> ${esc(b.pregnantDate)}`:""}</p>`:""}${lits.map(l=>`<p><strong>Litter ${esc(l.id)} DOB:</strong> ${esc(l.dob)}<br><strong>Wean:</strong> ${addDays(l.dob,21)} – ${addDays(l.dob,28)}<br><strong>REMOVE BREEDING MALE AFTER BIRTH</strong></p>`).join("")}<script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close()}
+
+function download(name,text,type){const blob=new Blob([text],{type}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function csv(v){const s=String(v??"");return/[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s}
+function snapshotTimestamp(){
+ const d=new Date(),pad=n=>String(n).padStart(2,"0");
+ return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}`;
+}
+function safeStateJSON(){return JSON.stringify(state).replace(/</g,"\\u003c")}
+function buildWorkingHTML(){
+ // The batch grid is scratch space, not colony data: blank it out so an
+ // unfinished cohort is never serialised into the saved working file.
+ // Chrome's page-translation feature injects its own widget into the DOM.
+ // Drop it, or it gets baked into every saved copy.
+ document.querySelectorAll('#goog-gt-tt,#goog-gt-vt,.skiptranslate,[class*="VIpgJd"]').forEach(el=>el.remove());
+ const scratch=["batchBody","beBody"].map(id=>{
+  const el=document.getElementById(id);return el?{el,html:el.innerHTML}:null}).filter(Boolean);
+ scratch.forEach(x=>x.el.innerHTML="");
+ let html="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
+ scratch.forEach(x=>x.el.innerHTML=x.html);
+ const replacement=`const INITIAL_STATE=${safeStateJSON()};`;
+ html=html.replace(/const INITIAL_STATE=.*?;\nlet state=clone\(INITIAL_STATE\);/s,replacement+"\nlet state=clone(INITIAL_STATE);");
+ return html;
+}
+async function saveWorkingHTMLToFile(){
+ try{
+  const html=buildWorkingHTML(),blob=new Blob([html],{type:"text/html;charset=utf-8"});
+  if("showSaveFilePicker" in window){
+   const handle=await window.showSaveFilePicker({id:"mouse-colony-working-html",suggestedName:"MouseColony_Working.html",types:[{description:"HTML file",accept:{"text/html":[".html"]}}]});
+   const writable=await handle.createWritable();await writable.write(blob);await writable.close();
+   LAST_EXPORTED=new Date().toLocaleString();setDirty(false,`Saved to ${handle.name} at ${LAST_EXPORTED}`);
+  }else{
+   download("MouseColony_Working.html",html,"text/html;charset=utf-8");LAST_EXPORTED=new Date().toLocaleString();setDirty(false,"Working HTML downloaded. Replace the copy in synced cloud.");
+  }
+ }catch(err){if(err.name!=="AbortError")alert("Working HTML save failed: "+err.message)}
+}
+function downloadWorkingHTML(){
+ const html=buildWorkingHTML();download(`MouseColony_Working_${snapshotTimestamp()}.html`,html,"text/html;charset=utf-8");LAST_EXPORTED=new Date().toLocaleString();setDirty(false,"Working HTML copy downloaded. Replace/archive it in synced cloud as needed.");
+}
+function exportSnapshotHTML(){
+ const active=state.mice.filter(activeMouse),cs=state.cages.filter(activeCage),openVet=state.events.filter(e=>e.type==="Vet Care-New Health Report"&&e.taskStatus==="Open");
+ const css=`body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;margin:0;background:#f5f6f8;color:#20262e}main{max-width:1400px;margin:auto;padding:24px}h1{margin-bottom:4px}.meta{color:#667085;margin-bottom:24px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card,section{background:white;border:1px solid #dde2e7;border-radius:12px;padding:14px;margin-bottom:16px}.n{font-size:28px;font-weight:800}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #e5e7eb;padding:8px;text-align:left;vertical-align:top}th{background:#f8fafc}.id{font-size:18px;font-weight:800}.open{color:#9a3034;font-weight:700}.small{color:#667085;font-size:12px}@media(max-width:800px){.cards{grid-template-columns:repeat(2,1fr)}}`;
+ const mouseRows=active.map(m=>`<tr><td class="id">${esc(m.mouseNo)}</td><td>${esc(m.earPunch)}</td><td>${esc(m.strain)}<div class="small">${esc(genotypeText(m))}</div></td><td>${esc(m.sex)}</td><td>${esc(m.cageBarcode||"")}</td><td>${esc(m.dob||"")}</td><td>${esc(m.status)}</td></tr>`).join("");
+ const cageRows=cs.map(c=>`<tr><td><strong>${esc(c.barcode)}</strong></td><td>${esc(c.type)}</td><td>${esc(c.room)}</td><td>${esc(occupants(c.barcode).map(m=>m.mouseNo+" "+(m.sex==="Male"?"♂":m.sex==="Female"?"♀":"")).join(", "))}</td></tr>`).join("");
+ const litterRows=state.litters.map(l=>`<tr><td><strong>${esc(l.id)}</strong></td><td>${esc((breeding(l.breedingId)||{}).cageBarcode||"")}</td><td>${esc(l.dob)}</td><td>${esc(l.weanedDate||"Not weaned")}</td><td>${esc(l.totalPups??"")}</td></tr>`).join("");
+ const eventRows=[...state.events].sort((a,b)=>(b.date||"").localeCompare(a.date||"")).map(e=>`<tr><td>${esc(e.date)}</td><td>${esc(e.type)}</td><td class="${e.taskStatus==="Open"?"open":""}">${esc(e.taskStatus||"Done")}</td><td>${esc(e.mouseNo||"")}</td><td>${esc(e.cageBarcode||"")}</td><td>${esc(e.note||"")}</td></tr>`).join("");
+ const html=`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(state.labName||"Mouse Colony")} Snapshot</title><style>${css}</style></head><body><main><h1>${esc(state.labName||"Mouse Colony")} — Shared Snapshot</h1><div class="meta">Protocol #${esc(state.defaultProtocolNo||"")} • Generated ${esc(new Date().toLocaleString())} • Read-only</div><div class="cards"><div class="card"><div class="small">Active mice</div><div class="n">${active.length}</div></div><div class="card"><div class="small">Active cages</div><div class="n">${cs.length}</div></div><div class="card"><div class="small">Unweaned litters</div><div class="n">${state.litters.filter(l=>!l.weanedDate).length}</div></div><div class="card"><div class="small">Open Vet Care</div><div class="n">${openVet.length}</div></div></div><section><h2>Mice</h2><table><thead><tr><th>ID</th><th>Ear</th><th>Strain / genotype</th><th>Sex</th><th>Cage</th><th>DOB</th><th>Status</th></tr></thead><tbody>${mouseRows}</tbody></table></section><section><h2>Cages</h2><table><thead><tr><th>Barcode</th><th>Type</th><th>Room</th><th>Occupants</th></tr></thead><tbody>${cageRows}</tbody></table></section><section><h2>Litters</h2><table><thead><tr><th>Litter</th><th>Cage</th><th>DOB</th><th>Weaned</th><th>Pups</th></tr></thead><tbody>${litterRows||'<tr><td colspan="5">No litters</td></tr>'}</tbody></table></section><section><h2>Events</h2><table><thead><tr><th>Date</th><th>Type</th><th>Status</th><th>Mouse(s)</th><th>Cage</th><th>Details</th></tr></thead><tbody>${eventRows}</tbody></table></section></main></body></html>`;
+ download(`MouseColony_snapshot_${snapshotTimestamp()}.html`,html,"text/html;charset=utf-8");
+}
+function downloadJSON(){download(`MouseColony_backup_${snapshotTimestamp()}.json`,JSON.stringify(state,null,2),"application/json")}
+function exportMiceCSV(){const rows=state.mice.map(m=>({mouseNo:m.mouseNo,earPunch:m.earPunch,strain:m.strain,genotype:genotypeText(m),sex:m.sex,cageBarcode:m.cageBarcode,dob:m.dob,status:m.status,protocolNo:m.protocolNo,sire:m.sire,dam:m.dam,litterId:m.litterId,notes:m.notes})),cols=["mouseNo","earPunch","strain","genotype","sex","cageBarcode","dob","status","protocolNo","sire","dam","litterId","notes"];download(`MouseColony_mice_${today()}.csv`,[cols.join(","),...rows.map(x=>cols.map(c=>csv(x[c])).join(","))].join("\n"),"text/csv;charset=utf-8")}
+function exportCagesCSV(){const cols=["barcode","room","biosafety","type","protocolNo","status","notes"];download(`MouseColony_cages_${today()}.csv`,[cols.join(","),...state.cages.map(x=>cols.map(c=>csv(x[c])).join(","))].join("\n"),"text/csv;charset=utf-8")}
+function exportEventsCSV(){const cols=["date","type","taskStatus","mouseNo","cageBarcode","location","note"];download(`MouseColony_events_${today()}.csv`,[cols.join(","),...state.events.map(x=>cols.map(c=>csv(x[c])).join(","))].join("\n"),"text/csv;charset=utf-8")}
+
+// ---- Minimal self-contained XLSX writer (ZIP store, no external library) ----
+function xmlEsc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&apos;")}
+function colName(n){let s="";while(n>0){n--;s=String.fromCharCode(65+n%26)+s;n=Math.floor(n/26)}return s}
+function sheetXML(rows){
+ const data=rows.map((row,ri)=>`<row r="${ri+1}">${row.map((v,ci)=>`<c r="${colName(ci+1)}${ri+1}" t="inlineStr"><is><t xml:space="preserve">${xmlEsc(v)}</t></is></c>`).join("")}</row>`).join("");
+ return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${data}</sheetData></worksheet>`;
+}
+function crc32(bytes){let c=0xffffffff;for(const b of bytes){c^=b;for(let k=0;k<8;k++)c=(c>>>1)^((c&1)?0xedb88320:0)}return (c^0xffffffff)>>>0}
+function u16(n){return [n&255,(n>>>8)&255]}
+function u32(n){return [n&255,(n>>>8)&255,(n>>>16)&255,(n>>>24)&255]}
+function makeZip(files){
+ const enc=new TextEncoder(),parts=[],central=[];let offset=0;
+ for(const f of files){const name=enc.encode(f.name),data=typeof f.data==="string"?enc.encode(f.data):f.data,crc=crc32(data);const local=new Uint8Array([...u32(0x04034b50),...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0),...u32(crc),...u32(data.length),...u32(data.length),...u16(name.length),...u16(0),...name]);parts.push(local,data);central.push({name,data,crc,offset});offset+=local.length+data.length}
+ const centralStart=offset;
+ for(const f of central){const h=new Uint8Array([...u32(0x02014b50),...u16(20),...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0),...u32(f.crc),...u32(f.data.length),...u32(f.data.length),...u16(f.name.length),...u16(0),...u16(0),...u16(0),...u16(0),...u32(0),...u32(f.offset),...f.name]);parts.push(h);offset+=h.length}
+ const centralSize=offset-centralStart,eocd=new Uint8Array([...u32(0x06054b50),...u16(0),...u16(0),...u16(central.length),...u16(central.length),...u32(centralSize),...u32(centralStart),...u16(0)]);parts.push(eocd);
+ return new Blob(parts,{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+}
+function exportExcelWorkbook(){
+ const sheets=[];
+ const miceRows=[["Mouse ID","Ear Punch","Strain","Sex","DOB","Age (weeks)","Cage","Room","Status","Protocol","Sire","Dam","Litter","Notes"],...state.mice.map(m=>[m.mouseNo,m.earPunch,m.strain,m.sex,m.dob,m.dob?(ageDays(m.dob)/7).toFixed(1):"",m.cageBarcode,cage(m.cageBarcode)?.room||"",m.status,m.protocolNo,m.sire,m.dam,m.litterId,m.notes])];
+ const genoRows=[["Mouse ID","Strain","Locus","Genotype"],...state.mice.flatMap(m=>(m.genotypes||[]).map(g=>[m.mouseNo,m.strain,g.locus,g.status]))];
+ const cageRows=[["Cage Barcode","Room","ABSL","Cage Type","Protocol","Status","Male","Female","Total Adults","Occupants","Notes"],...state.cages.map(c=>{const os=occupants(c.barcode);return[c.barcode,c.room,c.biosafety,c.type,c.protocolNo,c.status,os.filter(m=>m.sex==="Male").length,os.filter(m=>m.sex==="Female").length,os.length,os.map(m=>m.mouseNo).join(", "),c.notes]})];
+ const breedRows=[["Breeding ID","Cage","Setup Date","Status","Pregnancy Date","End Date","Male(s)","Female(s)","Notes"],...state.breeding.map(b=>[b.id,b.cageBarcode,b.startDate,b.status,b.pregnantDate,b.endDate,b.maleUids.map(u=>mouse(u)?.mouseNo||u).join(", "),b.femaleUids.map(u=>mouse(u)?.mouseNo||u).join(", "),b.notes])];
+ const litterRows=[["Litter ID","Breeding ID","Cage","DOB","Age Days","Weaning Start (D21)","Weaning End (D28)","Total Pups","Male Pups","Female Pups","Weaned Date","Notes","Wean Notes"],...state.litters.map(l=>[l.id,l.breedingId,breeding(l.breedingId)?.cageBarcode||"",l.dob,ageDays(l.dob),addDays(l.dob,21),addDays(l.dob,28),l.totalPups,l.malePups,l.femalePups,l.weanedDate,l.notes,l.weanNotes])];
+ const eventRows=[["Date","Type","Task Status","Mouse(s)","Cage","Location","Details","Source"],...state.events.map(e=>[e.date,e.type,e.taskStatus||"Done",e.mouseNo,e.cageBarcode,e.location,e.note,e.source])];
+ [["Mice",miceRows],["Genotypes",genoRows],["Cages",cageRows],["Breeding",breedRows],["Litters",litterRows],["Events",eventRows]].forEach(x=>sheets.push(x));
+ const files=[];const sheetOverrides=sheets.map((_,i)=>`<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("");
+ files.push({name:"[Content_Types].xml",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>${sheetOverrides}</Types>`});
+ files.push({name:"_rels/.rels",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`});
+ files.push({name:"xl/workbook.xml",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>${sheets.map((x,i)=>`<sheet name="${xmlEsc(x[0])}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join("")}</sheets></workbook>`});
+ files.push({name:"xl/_rels/workbook.xml.rels",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${sheets.map((_,i)=>`<Relationship Id="rId${i+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join("")}</Relationships>`});
+ sheets.forEach((x,i)=>files.push({name:`xl/worksheets/sheet${i+1}.xml`,data:sheetXML(x[1])}));
+ const blob=makeZip(files),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`MouseColony_${snapshotTimestamp()}.xlsx`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+}
+
+document.getElementById("jsonImport")?.addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text());if(!x.mice||!x.cages||!x.events)throw new Error("Incompatible backup.");x.version="2.0";x.storageMode="embedded-html";state=x;saveState();renderAll();alert("JSON backup imported. Save the Working HTML to make this recovery permanent.")}catch(err){alert("Import failed: "+err.message)}e.target.value=""})
+function resetData(){if(confirm("Reset the in-memory colony to the data originally embedded in this HTML?")){state=clone(INITIAL_STATE);saveState();renderAll()}}
+window.addEventListener("beforeunload",e=>{if(DIRTY||BATCH.length||Object.keys(EDIT_DRAFT).length){e.preventDefault();e.returnValue=""}});
+
+/* ================= Batch add: table entry for a whole cohort =================
+   BATCH lives only in memory and is never part of `state`, so an unfinished
+   grid is not written into the working HTML. Capacity is evaluated for the
+   whole batch at once, grouped by destination cage. */
+let BATCH=[];
+
+function bval(id){const el=document.getElementById(id);return el?el.value:""}
+function batchDefaults(){return{
+ strain:bval("bd_strain").trim(),locus:bval("bd_locus").trim(),geno:bval("bd_geno"),
+ sex:bval("bd_sex"),dob:bval("bd_dob"),ear:bval("bd_ear").trim(),
+ cage:bval("bd_cage"),status:bval("bd_status")||"Active"
+}}
+function batchBlankRow(){const d=batchDefaults();return{no:"",ear:d.ear,strain:d.strain,sex:d.sex,locus:d.locus,geno:d.geno,dob:d.dob,cage:d.cage,status:d.status,notes:""}}
+function batchAddRows(n=5){for(let i=0;i<n;i++)BATCH.push(batchBlankRow());batchRenumber(false)}
+function batchRemoveRow(i){BATCH.splice(i,1);renderBatch()}
+function batchClear(){if(BATCH.length&&!confirm(`Discard all ${BATCH.length} unsaved row(s) in the grid?`))return;BATCH=[];renderBatch()}
+
+function batchRenumber(force=false){
+ const taken=new Set(state.mice.map(m=>m.mouseNo));
+ if(!force)BATCH.forEach(r=>{const v=formatMouseNo(r.no);if(v)taken.add(v)});
+ let n=parseInt(nextMouseNo(),10)||1;
+ BATCH.forEach(r=>{
+  if(!force&&formatMouseNo(r.no))return;
+  let id;do{id=String(n).padStart(3,"0");n++}while(taken.has(id));
+  r.no=id;taken.add(id);
+ });
+ renderBatch();
+}
+function batchApplyDefaults(overwrite){
+ const d=batchDefaults();
+ BATCH.forEach(r=>["ear","strain","sex","locus","geno","dob","cage","status"].forEach(k=>{
+  if(d[k]==="")return;
+  if(overwrite||!r[k])r[k]=d[k];
+ }));
+ renderBatch();
+}
+
+/* ---- rendering ---- */
+function batchOpt(v,label,sel){return `<option value="${esc(v)}"${v===sel?" selected":""}>${esc(label)}</option>`}
+function batchCageOptions(sel){
+ const cs=state.cages.filter(activeCage).sort((a,b)=>a.room.localeCompare(b.room)||a.barcode.localeCompare(b.barcode));
+ return batchOpt("","— choose cage —",sel)+cs.map(c=>batchOpt(c.barcode,`${c.barcode} • ${c.type} • ${c.room}`,sel)).join("");
+}
+function batchList(vals,sel){return vals.map(v=>batchOpt(v,v||"—",sel)).join("")}
+function renderBatch(){
+ const tb=document.getElementById("batchBody");if(!tb)return;
+ const dc=document.getElementById("bd_cage");if(dc){const old=dc.value;dc.innerHTML=batchCageOptions(old)}
+ const bp=document.getElementById("bd_protocol");if(bp&&!bp.value)bp.value=state.defaultProtocolNo||"";
+ tb.innerHTML=BATCH.map((r,i)=>`<tr>
+ <td class="rowno">${i+1}</td>
+ <td><input data-r="${i}" data-f="no" value="${esc(r.no)}" placeholder="auto"></td>
+ <td><input data-r="${i}" data-f="ear" value="${esc(r.ear)}"></td>
+ <td><input data-r="${i}" data-f="strain" value="${esc(r.strain)}"></td>
+ <td><select data-r="${i}" data-f="sex">${batchList(["","Male","Female","Unknown"],r.sex||"")}</select></td>
+ <td><input data-r="${i}" data-f="locus" value="${esc(r.locus)}"></td>
+ <td><select data-r="${i}" data-f="geno">${batchList(["Unknown","WT","Het","Hom"],r.geno||"Unknown")}</select></td>
+ <td><input data-r="${i}" data-f="dob" type="date" value="${esc(r.dob)}"></td>
+ <td><select data-r="${i}" data-f="cage">${batchCageOptions(r.cage||"")}</select></td>
+ <td><select data-r="${i}" data-f="status">${batchList(["Active","Breeding"],r.status||"Active")}</select></td>
+ <td><input data-r="${i}" data-f="notes" value="${esc(r.notes)}"></td>
+ <td><button type="button" class="btn small danger" onclick="batchRemoveRow(${i})" title="Remove row">&times;</button></td>
+ </tr>`).join("")||`<tr><td colspan="12" class="empty">Grid is empty. Set the row defaults above, then add rows or paste a block from Excel.</td></tr>`;
+ updateBatchReport();
+}
+document.getElementById("batchBody")?.addEventListener("input",batchCellEdit);
+document.getElementById("batchBody")?.addEventListener("change",batchCellEdit);
+function batchCellEdit(e){
+ const el=e.target,i=el.dataset?.r,f=el.dataset?.f;
+ if(i===undefined||!f)return;
+ BATCH[Number(i)][f]=el.value;
+ updateBatchReport();
+}
+
+/* ---- validation: whole-batch capacity, grouped by destination cage ---- */
+function batchCapacity(){
+ const pending={};
+ BATCH.forEach(r=>{if(r.cage)(pending[r.cage]=pending[r.cage]||[]).push(r)});
+ return Object.keys(pending).sort().map(bc=>{
+  const rows=pending[bc],c=cage(bc);
+  if(!c)return{bc,ok:false,text:`Cage ${bc} is not an active cage.`};
+  const r=room(c.room);
+  if(!r)return{bc,ok:false,text:`Room configuration for ${bc} not found.`};
+  const cur=cageCounts(bc);
+  const counts={
+   male:cur.male+rows.filter(x=>x.sex==="Male").length,
+   female:cur.female+rows.filter(x=>x.sex==="Female").length,
+   unknown:cur.unknown+rows.filter(x=>!["Male","Female"].includes(x.sex)).length,
+   total:cur.total+rows.length
+  };
+  const rules=r.cageRules||{};let ok=true,parts=[];
+  if(rules.totalMax){ok=counts.total<=rules.totalMax;parts.push(`${counts.total}/${rules.totalMax} total`)}
+  else{
+   if(rules.maleMax!=null){ok=ok&&counts.male<=rules.maleMax;parts.push(`\u2642 ${counts.male}/${rules.maleMax}`)}
+   if(rules.femaleMax!=null){ok=ok&&counts.female<=rules.femaleMax;parts.push(`\u2640 ${counts.female}/${rules.femaleMax}`)}
+   if(counts.unknown)parts.push(`unknown sex ${counts.unknown}`)
+  }
+  return{bc,ok,n:rows.length,text:`${bc} (${c.room}) after adding ${rows.length}: ${parts.join(" \u2022 ")}`}
+ });
+}
+function batchValidate(){
+ const errs=[],warns=[],seen=new Map();
+ BATCH.forEach((r,i)=>{
+  const id=formatMouseNo(r.no),n=i+1;
+  if(!id)errs.push(`Row ${n}: Mouse ID is empty.`);
+  else if(state.mice.some(m=>m.mouseNo===id))errs.push(`Row ${n}: Mouse ID ${id} already exists in the colony.`);
+  else if(seen.has(id))errs.push(`Row ${n}: Mouse ID ${id} duplicates row ${seen.get(id)+1}.`);
+  else seen.set(id,i);
+  if(!String(r.strain||"").trim())errs.push(`Row ${n}: strain is required.`);
+  if(!r.cage)errs.push(`Row ${n}: destination cage is required.`);
+  if(!["Male","Female"].includes(r.sex))warns.push(`Row ${n}: sex is not set, so it will not count against the \u2642/\u2640 cage limits.`);
+  if(!r.dob)warns.push(`Row ${n}: DOB is empty, so age will not be calculated.`);
+  if(r.geno&&r.geno!=="Unknown"&&!String(r.locus||"").trim())warns.push(`Row ${n}: genotype ${r.geno} has no locus, so this mouse will inherit the ${r.strain||"strain"} default instead.`);
+ });
+ const caps=batchCapacity();
+ caps.forEach(c=>{if(!c.ok)errs.push(`Housing rule exceeded \u2014 ${c.text}.`)});
+ return{errs,warns,caps};
+}
+function updateBatchReport(){
+ const box=document.getElementById("batchReport"),btn=document.getElementById("batchCommit");
+ if(!box)return;
+ if(!BATCH.length){
+  box.innerHTML=`<div class="muted">No rows yet.</div>`;
+  if(btn){btn.disabled=true;btn.textContent="Add 0 mice"}
+  return;
+ }
+ const v=batchValidate(),blocked=v.errs.length>0;
+ const caps=v.caps.map(c=>`<div class="alert ${c.ok?"ok":"red"}">${esc(c.text)}</div>`).join("");
+ const errs=v.errs.length?`<div class="alert red"><strong>${v.errs.length} blocking issue(s)</strong><br>${v.errs.slice(0,10).map(esc).join("<br>")}${v.errs.length>10?`<br>… and ${v.errs.length-10} more`:""}</div>`:"";
+ const warns=v.warns.length?`<div class="alert"><strong>${v.warns.length} warning(s)</strong><br>${v.warns.slice(0,6).map(esc).join("<br>")}${v.warns.length>6?`<br>… and ${v.warns.length-6} more`:""}</div>`:"";
+ box.innerHTML=caps+errs+warns+(blocked?"":`<div class="notice">Ready to commit ${BATCH.length} mouse record(s). Protocol <strong>#${esc(bval("bd_protocol").trim()||state.defaultProtocolNo)}</strong> will be applied to all of them.</div>`);
+ if(btn){btn.disabled=blocked;btn.textContent=blocked?`${v.errs.length} issue(s) to fix`:`Add ${BATCH.length} mice`}
+}
+
+/* ---- commit ---- */
+function batchCommit(){
+ if(!BATCH.length)return;
+ const v=batchValidate();
+ if(v.errs.length){alert("Cannot commit:\n\n"+v.errs.slice(0,12).join("\n"));return}
+ if(v.warns.length&&!confirm(`${BATCH.length} mice will be added with ${v.warns.length} warning(s). Continue?`))return;
+ const protocol=bval("bd_protocol").trim()||state.defaultProtocolNo;
+ const stamp=today(),base=Date.now(),ids=[],cages=new Set();
+ BATCH.forEach((r,i)=>{
+  const id=formatMouseNo(r.no),locus=String(r.locus||"").trim();
+  state.mice.push({
+   uid:`m-${base}-${i}`,mouseNo:id,dob:r.dob||"",generation:"",
+   earPunch:String(r.ear||"").trim(),strain:String(r.strain).trim(),
+   genotypes:locus?[{locus,status:r.geno||"Unknown"}]:[],
+   sex:r.sex||"",status:r.status||"Active",autoBreeding:false,cageBarcode:r.cage,protocolNo:protocol,
+   sire:"",dam:"",litterId:"",notes:String(r.notes||"").trim(),
+   createdAt:stamp,updatedAt:stamp
+  });
+  ids.push(id);cages.add(r.cage);
+ });
+ const cageList=[...cages];
+ const rooms=[...new Set(cageList.map(bc=>cage(bc)?.room).filter(Boolean))];
+ addEvent({type:"new mouse",mouseNo:ids.join(", "),cageBarcode:cageList.join(", "),location:rooms.join(", "),
+  note:`Batch entry: ${ids.length} mouse record(s) added across ${cageList.length} cage(s) under protocol #${protocol}.`});
+ const n=ids.length;BATCH=[];
+ saveState();renderAll();
+ alert(`${n} mice added to the in-memory colony.\n\nSave the Working HTML to make this permanent.`);
+}
+
+/* ---- Excel paste ---- */
+function batchNormSex(v){const t=String(v||"").trim().toLowerCase();
+ if(!t)return"";
+ if(/^(m|male|\u2642|\u96c4|\u516c)$/.test(t))return"Male";
+ if(/^(f|female|\u2640|\u96cc|\u6bcd)$/.test(t))return"Female";
+ return"Unknown"}
+function batchNormGeno(v){const t=String(v||"").trim().toLowerCase();
+ if(/^(hom|homo|\+\/\+)$/.test(t))return"Hom";
+ if(/^(het|\+\/-)$/.test(t))return"Het";
+ if(/^(wt|-\/-|wildtype|wild-type)$/.test(t))return"WT";
+ return"Unknown"}
+function batchNormDate(v){const t=String(v||"").trim();
+ if(!t)return"";
+ if(/^\d{4}-\d{2}-\d{2}$/.test(t))return t;
+ const m=t.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
+ if(m)return`${m[3]}-${m[1].padStart(2,"0")}-${m[2].padStart(2,"0")}`;
+ const d=new Date(t);return isNaN(d.getTime())?"":d.toISOString().slice(0,10)}
+function batchNormCage(v){const t=String(v||"").trim();
+ if(!t)return"";
+ if(cage(t))return t;
+ const strip=x=>String(x).replace(/^#/,"");
+ const hit=state.cages.find(c=>strip(c.barcode)===strip(t));
+ return hit?hit.barcode:""}
+function batchParsePaste(){
+ const ta=document.getElementById("batchPaste"),raw=ta?ta.value:"";
+ if(!raw.trim()){alert("Paste a block of cells from Excel first.");return}
+ const d=batchDefaults(),rows=[];let skipped=0,badCage=0;
+ raw.replace(/\r/g,"").split("\n").forEach(line=>{
+  if(!line.trim())return;
+  const c=line.split("\t").map(x=>x.trim());
+  if(/^(mouse\s*id|mouseno|id|no\.?|#)$/i.test(c[0])){skipped++;return}
+  const pastedCage=c[7]||"";
+  const resolved=pastedCage?batchNormCage(pastedCage):d.cage;
+  if(pastedCage&&!resolved)badCage++;
+  rows.push({
+   no:c[0]||"",ear:c[1]||d.ear,strain:c[2]||d.strain,
+   sex:c[3]?batchNormSex(c[3]):d.sex,
+   locus:c[4]||d.locus,geno:c[5]?batchNormGeno(c[5]):d.geno,
+   dob:c[6]?batchNormDate(c[6]):d.dob,
+   cage:resolved,status:c[8]||d.status,notes:c[9]||""
+  });
+ });
+ if(!rows.length){alert("Nothing parsed. Cells must be tab-separated, one mouse per line.");return}
+ BATCH=BATCH.concat(rows);
+ if(ta)ta.value="";
+ batchRenumber(false);
+ let msg=`${rows.length} row(s) parsed into the grid.`;
+ if(skipped)msg+=`\n${skipped} header row(s) skipped.`;
+ if(badCage)msg+=`\n${badCage} row(s) had a cage barcode that does not match any active cage; pick a cage for those rows.`;
+ alert(msg);
+}
+
+/* ================= Sequential cage creation =================
+   Facility barcodes are often issued as a contiguous block, so the
+   generator preserves the prefix and the zero padding of the start value. */
+function barcodeParts(bc){
+ const m=String(bc||"").trim().match(/^(.*?)(\d+)$/);
+ return m?{prefix:m[1],digits:m[2],width:m[2].length}:null;
+}
+function barcodeAt(start,i){
+ const p=barcodeParts(start);
+ if(!p)return null;
+ const n=(BigInt(p.digits)+BigInt(i)).toString();
+ return p.prefix+(n.length>=p.width?n:n.padStart(p.width,"0"));
+}
+function nextFreeBarcode(){
+ // suggest one past the highest existing barcode that shares the commonest prefix
+ const parts=state.cages.map(c=>barcodeParts(c.barcode)).filter(Boolean);
+ if(!parts.length)return"";
+ const tally={};parts.forEach(p=>tally[p.prefix]=(tally[p.prefix]||0)+1);
+ const prefix=Object.keys(tally).sort((a,b)=>tally[b]-tally[a])[0];
+ const same=parts.filter(p=>p.prefix===prefix);
+ let max=-1n,width=same[0].width;
+ same.forEach(p=>{const v=BigInt(p.digits);if(v>max){max=v;width=p.width}});
+ const n=(max+1n).toString();
+ return prefix+(n.length>=width?n:n.padStart(width,"0"));
+}
+function openBulkCageModal(){
+ const f=document.getElementById("bulkCageForm");if(f)f.reset();
+ populateSelectors();
+ const ro=state.rooms.filter(r=>r.active).map(r=>`<option>${esc(r.name)}</option>`).join("");
+ document.getElementById("bc_room").innerHTML=ro;
+ document.getElementById("bc_start").value=nextFreeBarcode();
+ document.getElementById("bc_count").value=6;
+ document.getElementById("bc_type").value="Holding";
+ document.getElementById("bc_protocol").value=state.defaultProtocolNo||"";
+ bcUpdatePreview();
+ document.getElementById("bulkCageModal").classList.add("open");
+}
+["bc_start","bc_count","bc_room","bc_type"].forEach(id=>{
+ const el=document.getElementById(id);
+ if(el){el.addEventListener("input",bcUpdatePreview);el.addEventListener("change",bcUpdatePreview)}
+});
+function bcPlan(){
+ const start=document.getElementById("bc_start").value.trim();
+ const count=Math.max(0,Math.min(200,parseInt(document.getElementById("bc_count").value,10)||0));
+ const roomName=document.getElementById("bc_room").value;
+ const list=[],clash=[];
+ if(!barcodeParts(start))return{bad:"Start barcode must end in digits, for example #0000000000.",list,clash,roomName,count};
+ for(let i=0;i<count;i++){
+  const bc=barcodeAt(start,i);
+  list.push(bc);
+  if(state.cages.some(c=>c.barcode===bc))clash.push(bc);
+ }
+ const r=room(roomName);
+ const used=r?roomUsed(roomName):0;
+ const free=r?r.capacity-used:0;
+ return{bad:"",list,clash,roomName,count,used,capacity:r?r.capacity:0,free,biosafety:r?r.biosafety:""};
+}
+function bcUpdatePreview(){
+ const box=document.getElementById("bcPreview"),btn=document.getElementById("bcSubmit");
+ if(!box)return;
+ const p=bcPlan();
+ const bio=document.getElementById("bc_biosafety");if(bio)bio.value=p.biosafety||"";
+ let blocked=false,html="";
+ if(p.bad){html=`<strong>${esc(p.bad)}</strong>`;blocked=true}
+ else if(!p.list.length){html=`<strong>Nothing to create.</strong>`;blocked=true}
+ else{
+  const shown=p.list.length<=24?p.list:p.list.slice(0,20).concat(["\u2026",p.list[p.list.length-1]]);
+  html=`<strong>${p.list.length} cage(s): ${esc(p.list[0])} \u2192 ${esc(p.list[p.list.length-1])}</strong>`
+      +`<div class="seq-preview">${shown.map(esc).join("<br>")}</div>`;
+  if(p.clash.length){html+=`<br><strong>Blocked:</strong> ${p.clash.length} barcode(s) already exist \u2014 ${esc(p.clash.slice(0,5).join(", "))}${p.clash.length>5?" \u2026":""}.`;blocked=true}
+  if(p.list.length>p.free){html+=`<br><strong>Blocked:</strong> ${esc(p.roomName)} has ${p.free} free cage slot(s) of ${p.capacity}; this run needs ${p.list.length}.`;blocked=true}
+  if(!blocked)html+=`<br>${esc(p.roomName)}: ${p.used} \u2192 ${p.used+p.list.length} of ${p.capacity} active cages.`;
+ }
+ box.innerHTML=html;
+ if(btn)btn.disabled=blocked;
+}
+document.getElementById("bulkCageForm")?.addEventListener("submit",e=>{
+ e.preventDefault();
+ const p=bcPlan();
+ if(p.bad||!p.list.length||p.clash.length||p.list.length>p.free){bcUpdatePreview();return}
+ const type=document.getElementById("bc_type").value;
+ const protocol=document.getElementById("bc_protocol").value.trim()||state.defaultProtocolNo;
+ const notes=document.getElementById("bc_notes").value.trim();
+ const base=Date.now();
+ p.list.forEach((bc,i)=>state.cages.push({
+  id:`c-${base}-${i}`,barcode:bc,type,room:p.roomName,
+  biosafety:room(p.roomName)?.biosafety||"ABSL-2",protocolNo:protocol,status:"Active",autoType:false,notes
+ }));
+ addEvent({type:"new cage",cageBarcode:`${p.list[0]} \u2192 ${p.list[p.list.length-1]}`,location:p.roomName,
+  note:`Sequential run: ${p.list.length} ${type} cage(s) created in ${p.roomName} under protocol #${protocol}.`});
+ saveState();closeModal("bulkCageModal");renderAll();
+ alert(`${p.list.length} cages created.\n\nSave the Working HTML to make this permanent.`);
+});
+
+/* ================= Batch edit =================
+   EDIT_DRAFT holds only the mice you have actually touched, so "revert" is a
+   reset and nothing is written to `state` until you apply. */
+let EDIT_DRAFT={};
+let EDIT_SEL=new Set();
+const BE_STATUSES=["Active","Breeding","Dead","Sacrificed"];
+
+function genoRaw(m){return (m.genotypes||[]).filter(g=>g.locus).map(g=>`${g.locus}: ${g.status}`).join(" \u2022 ")}
+function genoParse(text){
+ const list=[],odd=[];
+ String(text||"").split(/[\u2022;,\n]/).map(x=>x.trim()).filter(Boolean).forEach(part=>{
+  const m=part.match(/^([^:=]+)[:=]\s*(.+)$/);
+  if(!m){list.push({locus:part,status:"Unknown"});return}
+  const locus=m[1].trim(),rawSt=m[2].trim(),st=batchNormGeno(rawSt);
+  if(st==="Unknown"&&!/^unknown$/i.test(rawSt))odd.push(`${locus}: ${rawSt}`);
+  list.push({locus,status:st});
+ });
+ return{list,odd};
+}
+function beSnapshot(m){return{
+ ear:m.earPunch||"",strain:m.strain||"",sex:m.sex||"",geno:genoRaw(m),
+ dob:m.dob||"",cage:m.cageBarcode||"",status:m.status||"Active",
+ protocol:m.protocolNo||"",notes:m.notes||""
+}}
+function beDraft(uid){
+ const m=mouse(uid);if(!m)return null;
+ if(!EDIT_DRAFT[uid])EDIT_DRAFT[uid]=beSnapshot(m);
+ return EDIT_DRAFT[uid];
+}
+function beView(m){return EDIT_DRAFT[m.uid]||beSnapshot(m)}
+function beDiff(uid){
+ const m=mouse(uid),d=EDIT_DRAFT[uid];
+ if(!m||!d)return[];
+ const base=beSnapshot(m);
+ return Object.keys(base).filter(k=>String(base[k])!==String(d[k])).map(k=>({field:k,from:base[k],to:d[k]}));
+}
+function beDirtyUids(){return Object.keys(EDIT_DRAFT).filter(uid=>beDiff(uid).length)}
+function beChangeCount(){return beDirtyUids().reduce((n,uid)=>n+beDiff(uid).length,0)}
+
+/* ---- filtering ---- */
+function beFiltered(){
+ const q=(document.getElementById("be_q")?.value||"").toLowerCase().trim();
+ const fs=document.getElementById("be_fstatus")?.value||"";
+ const fstr=document.getElementById("be_fstrain")?.value||"";
+ const froom=document.getElementById("be_froom")?.value||"";
+ const fcage=document.getElementById("be_fcage")?.value||"";
+ const fg=document.getElementById("be_fgeno")?.value||"";
+ return state.mice.filter(m=>{
+  const v=beView(m),c=cage(v.cage);
+  if(q){const hay=[m.mouseNo,v.ear,v.strain,v.geno,v.sex,v.cage,v.dob,v.status,v.protocol,v.notes].join(" ").toLowerCase();if(!hay.includes(q))return false}
+  if(fs&&v.status!==fs)return false;
+  if(fstr&&v.strain!==fstr)return false;
+  if(froom&&(c?.room||"")!==froom)return false;
+  if(fcage&&v.cage!==fcage)return false;
+  if(fg==="__none"){if(v.geno.trim())return false}
+  else if(fg){if(!genoParse(v.geno).list.some(g=>g.status===fg))return false}
+  return true;
+ }).sort((a,b)=>String(a.mouseNo).localeCompare(String(b.mouseNo),undefined,{numeric:true}));
+}
+function beClearFilters(){
+ ["be_q","be_fstatus","be_fstrain","be_froom","be_fcage","be_fgeno"].forEach(id=>{const el=document.getElementById(id);if(el)el.value=""});
+ renderBulkEdit();
+}
+["be_q","be_fstatus","be_fstrain","be_froom","be_fcage","be_fgeno"].forEach(id=>{
+ const el=document.getElementById(id);
+ if(el){el.addEventListener("input",renderBulkEdit);el.addEventListener("change",renderBulkEdit)}
+});
+
+/* ---- selection ---- */
+function beSelectShown(on){
+ beFiltered().forEach(m=>on?EDIT_SEL.add(m.uid):EDIT_SEL.delete(m.uid));
+ if(!on)EDIT_SEL.clear();
+ renderBulkEdit();
+}
+function beToggleAll(on){beSelectShown(on)}
+
+/* ---- rendering ---- */
+function beCageOptions(sel){
+ const cs=state.cages.filter(activeCage).sort((a,b)=>a.room.localeCompare(b.room)||a.barcode.localeCompare(b.barcode));
+ let html=batchOpt("","\u2014 none \u2014",sel);
+ if(sel&&!cs.some(c=>c.barcode===sel))html+=batchOpt(sel,`${sel} (inactive)`,sel);
+ return html+cs.map(c=>batchOpt(c.barcode,`${c.barcode} \u2022 ${c.room}`,sel)).join("");
+}
+function renderBulkEdit(){
+ const tb=document.getElementById("beBody");if(!tb)return;
+ // filter dropdowns
+ const strains=[...new Set(state.mice.map(m=>beView(m).strain).filter(Boolean))].sort();
+ const rooms=state.rooms.map(r=>r.name);
+ const cages=state.cages.filter(activeCage).map(c=>c.barcode).sort();
+ const fill=(id,label,vals)=>{const el=document.getElementById(id);if(!el)return;const old=el.value;
+  el.innerHTML=`<option value="">${label}</option>`+vals.map(v=>`<option${v===old?" selected":""}>${esc(v)}</option>`).join("");
+  if([...el.options].some(o=>o.value===old))el.value=old};
+ fill("be_fstrain","All strains",strains);fill("be_froom","All rooms",rooms);fill("be_fcage","All cages",cages);
+
+ const rows=beFiltered();
+ tb.innerHTML=rows.map(m=>{
+  const v=beView(m),d=EDIT_DRAFT[m.uid],base=beSnapshot(m);
+  const ch=f=>d&&String(base[f])!==String(d[f])?' class="cell-dirty"':'';
+  const dirty=beDiff(m.uid).length>0,sel=EDIT_SEL.has(m.uid);
+  return `<tr data-u="${m.uid}" class="${dirty?"dirty":""}${sel?" sel":""}">
+  <td class="chkcell"><input type="checkbox" class="chk" data-u="${m.uid}" data-f="__sel"${EDIT_SEL.has(m.uid)?" checked":""}></td>
+  <td class="idcell">${esc(m.mouseNo)}</td>
+  <td><input data-u="${m.uid}" data-f="ear" value="${esc(v.ear)}"${ch("ear")}></td>
+  <td><input data-u="${m.uid}" data-f="strain" value="${esc(v.strain)}"${ch("strain")}></td>
+  <td><select data-u="${m.uid}" data-f="sex"${ch("sex")}>${batchList(["","Male","Female","Unknown"],v.sex)}</select></td>
+  <td><input data-u="${m.uid}" data-f="geno" value="${esc(v.geno)}" placeholder="${esc(lociText(strainLoci(v.strain))||"Locus: Hom")}"${ch("geno")}></td>
+  <td><input data-u="${m.uid}" data-f="dob" type="date" value="${esc(v.dob)}"${ch("dob")}></td>
+  <td><select data-u="${m.uid}" data-f="cage"${ch("cage")}>${beCageOptions(v.cage)}</select></td>
+  <td><select data-u="${m.uid}" data-f="status"${ch("status")}>${batchList(BE_STATUSES,v.status)}</select></td>
+  <td><input data-u="${m.uid}" data-f="protocol" value="${esc(v.protocol)}"${ch("protocol")}></td>
+  <td><input data-u="${m.uid}" data-f="notes" value="${esc(v.notes)}"${ch("notes")}></td>
+  </tr>`}).join("")||`<tr><td colspan="11" class="empty">No mice match the current filter.</td></tr>`;
+
+ const allChk=document.getElementById("beAllChk");
+ if(allChk)allChk.checked=rows.length>0&&rows.every(m=>EDIT_SEL.has(m.uid));
+ const st=document.getElementById("beSelTally");
+ if(st)st.textContent=`${rows.length} shown \u2022 ${EDIT_SEL.size} selected`;
+ if(!document.getElementById("beValueBox").innerHTML)beRenderValueBox();
+ updateBeReport();
+}
+document.getElementById("beBody")?.addEventListener("input",beCellEdit);
+document.getElementById("beBody")?.addEventListener("change",beCellEdit);
+function beCellEdit(e){
+ const el=e.target,uid=el.dataset?.u,f=el.dataset?.f;
+ if(!uid||!f)return;
+ if(f==="__sel"){el.checked?EDIT_SEL.add(uid):EDIT_SEL.delete(uid);renderBulkEdit();return}
+ const d=beDraft(uid);if(!d)return;
+ d[f]=el.value;
+ const base=beSnapshot(mouse(uid));
+ el.classList.toggle("cell-dirty",String(base[f])!==String(d[f]));
+ el.closest("tr")?.classList.toggle("dirty",beDiff(uid).length>0);
+ updateBeReport();
+}
+
+/* ---- one field to many mice ---- */
+function beRenderValueBox(){
+ const f=document.getElementById("be_field")?.value,box=document.getElementById("beValueBox");
+ if(!box)return;
+ const L=t=>`<label>${t}</label>`;
+ if(f==="setLocus")box.innerHTML=`<div class="field">${L("Locus and status")}<div style="display:grid;grid-template-columns:1fr 140px;gap:8px"><input id="be_v1" placeholder="Locus"><select id="be_v2">${batchList(["Unknown","WT","Het","Hom"],"Hom")}</select></div></div>`;
+ else if(f==="rmLocus")box.innerHTML=`<div class="field">${L("Locus to remove")}<input id="be_v1" placeholder="Locus"></div>`;
+ else if(f==="clearGeno")box.innerHTML=`<div class="field">${L("Nothing to fill in")}<div class="help">Clears the per-mouse genotype so the strain default is inherited again.</div></div>`;
+ else if(f==="status")box.innerHTML=`<div class="field">${L("New status")}<select id="be_v1">${batchList(BE_STATUSES,"Active")}</select></div>`;
+ else if(f==="sex")box.innerHTML=`<div class="field">${L("New sex")}<select id="be_v1">${batchList(["Male","Female","Unknown"],"Male")}</select></div>`;
+ else if(f==="cage")box.innerHTML=`<div class="field">${L("Destination cage")}<select id="be_v1">${beCageOptions("")}</select></div>`;
+ else if(f==="dob")box.innerHTML=`<div class="field">${L("New DOB")}<input id="be_v1" type="date"></div>`;
+ else if(f==="notes")box.innerHTML=`<div class="field">${L("Notes")}<div style="display:grid;grid-template-columns:1fr 130px;gap:8px"><input id="be_v1" placeholder="text"><select id="be_v2">${batchList(["Replace","Append"],"Replace")}</select></div></div>`;
+ else box.innerHTML=`<div class="field">${L(f==="ear"?"New ear punch":f==="strain"?"New strain":"New protocol no.")}<input id="be_v1"></div>`;
+}
+function beApplyField(){
+ const f=document.getElementById("be_field").value;
+ const v1=(document.getElementById("be_v1")?.value||"").trim();
+ const v2=document.getElementById("be_v2")?.value||"";
+ if(!EDIT_SEL.size){alert("Select at least one mouse first.");return}
+ if((f==="setLocus"||f==="rmLocus")&&!v1){alert("Enter a locus name.");return}
+ if(f==="strain"&&!v1){alert("Strain cannot be blank.");return}
+ let n=0;
+ [...EDIT_SEL].forEach(uid=>{
+  const d=beDraft(uid);if(!d)return;
+  if(f==="setLocus"){
+   const p=genoParse(d.geno).list,i=p.findIndex(g=>g.locus.toLowerCase()===v1.toLowerCase());
+   if(i>=0)p[i]={locus:p[i].locus,status:v2};else p.push({locus:v1,status:v2});
+   d.geno=p.map(g=>`${g.locus}: ${g.status}`).join(" \u2022 ");
+  }
+  else if(f==="rmLocus"){
+   const p=genoParse(d.geno).list.filter(g=>g.locus.toLowerCase()!==v1.toLowerCase());
+   d.geno=p.map(g=>`${g.locus}: ${g.status}`).join(" \u2022 ");
+  }
+  else if(f==="clearGeno")d.geno="";
+  else if(f==="notes")d.notes=v2==="Append"?[d.notes,v1].filter(Boolean).join(" "):v1;
+  else d[f]=v1;
+  n++;
+ });
+ renderBulkEdit();
+}
+
+/* ---- validation: capacity is evaluated on the projected colony ---- */
+function beProjected(){
+ return state.mice.map(m=>{
+  const d=EDIT_DRAFT[m.uid];
+  if(!d)return m;
+  return{...m,earPunch:d.ear,strain:d.strain,sex:d.sex,dob:d.dob,
+   cageBarcode:d.cage,status:d.status,protocolNo:d.protocol,notes:d.notes};
+ });
+}
+function beCapacityReport(){
+ const proj=beProjected(),touched=new Set();
+ beDirtyUids().forEach(uid=>{
+  const m=mouse(uid),d=EDIT_DRAFT[uid];
+  if(m?.cageBarcode)touched.add(m.cageBarcode);
+  if(d?.cage)touched.add(d.cage);
+ });
+ return [...touched].sort().map(bc=>{
+  const c=cage(bc);
+  if(!c)return{bc,ok:false,text:`Cage ${bc} is not an active cage.`};
+  const r=room(c.room);
+  if(!r)return{bc,ok:false,text:`Room configuration for ${bc} not found.`};
+  const occ=proj.filter(m=>activeMouse(m)&&m.cageBarcode===bc);
+  const counts={
+   male:occ.filter(m=>m.sex==="Male").length,
+   female:occ.filter(m=>m.sex==="Female").length,
+   unknown:occ.filter(m=>!["Male","Female"].includes(m.sex)).length,
+   total:occ.length
+  };
+  const rules=r.cageRules||{};let ok=true,parts=[];
+  if(rules.totalMax){ok=counts.total<=rules.totalMax;parts.push(`${counts.total}/${rules.totalMax} total`)}
+  else{
+   if(rules.maleMax!=null){ok=ok&&counts.male<=rules.maleMax;parts.push(`\u2642 ${counts.male}/${rules.maleMax}`)}
+   if(rules.femaleMax!=null){ok=ok&&counts.female<=rules.femaleMax;parts.push(`\u2640 ${counts.female}/${rules.femaleMax}`)}
+   if(counts.unknown)parts.push(`unknown sex ${counts.unknown}`)
+  }
+  return{bc,ok,text:`${bc} (${c.room}) after applying: ${parts.join(" \u2022 ")}`};
+ });
+}
+function beValidate(){
+ const errs=[],warns=[],uids=beDirtyUids();
+ uids.forEach(uid=>{
+  const m=mouse(uid),d=EDIT_DRAFT[uid],id=m.mouseNo;
+  if(!d.strain.trim())errs.push(`Mouse ${id}: strain cannot be blank.`);
+  if(!d.cage)errs.push(`Mouse ${id}: destination cage cannot be blank.`);
+  else if(!cage(d.cage))errs.push(`Mouse ${id}: cage ${d.cage} is not an active cage.`);
+  if(!BE_STATUSES.includes(d.status))errs.push(`Mouse ${id}: unknown status "${d.status}".`);
+  const g=genoParse(d.geno);
+  g.odd.forEach(o=>warns.push(`Mouse ${id}: genotype "${o}" was not recognised and will be stored as Unknown.`));
+  if(!["Male","Female"].includes(d.sex))warns.push(`Mouse ${id}: sex is not set, so it will not count against the \u2642/\u2640 cage limits.`);
+  if(["Dead","Sacrificed"].includes(d.status)&&m.status!==d.status){
+   const b=state.breeding.find(x=>!x.endDate&&[...x.maleUids,...x.femaleUids].includes(uid));
+   if(b)warns.push(`Mouse ${id} is in the active breeding record for cage ${b.cageBarcode}; end that record separately if the pairing is over.`);
+  }
+ });
+ beCapacityReport().forEach(c=>{if(!c.ok)errs.push(`Housing rule exceeded \u2014 ${c.text}.`)});
+ return{errs,warns,uids};
+}
+function updateBeReport(){
+ const box=document.getElementById("beReport"),btn=document.getElementById("beApply"),tally=document.getElementById("beTally");
+ if(!box)return;
+ const uids=beDirtyUids(),nch=beChangeCount();
+ if(tally)tally.textContent=`${nch} pending`;
+ if(!uids.length){
+  box.innerHTML=`<div class="muted">No pending changes. Edit cells directly, or select mice and use the field applier above.</div>`;
+  if(btn){btn.disabled=true;btn.textContent="Apply 0 changes"}
+  return;
+ }
+ const v=beValidate(),blocked=v.errs.length>0;
+ const caps=beCapacityReport().map(c=>`<div class="alert ${c.ok?"ok":"red"}">${esc(c.text)}</div>`).join("");
+ const byField={};uids.forEach(u=>beDiff(u).forEach(d=>byField[d.field]=(byField[d.field]||0)+1));
+ const summary=Object.keys(byField).sort().map(f=>`${f} (${byField[f]})`).join(", ");
+ const errs=v.errs.length?`<div class="alert red"><strong>${v.errs.length} blocking issue(s)</strong><br>${v.errs.slice(0,10).map(esc).join("<br>")}${v.errs.length>10?`<br>\u2026 and ${v.errs.length-10} more`:""}</div>`:"";
+ const warns=v.warns.length?`<div class="alert"><strong>${v.warns.length} warning(s)</strong><br>${v.warns.slice(0,6).map(esc).join("<br>")}${v.warns.length>6?`<br>\u2026 and ${v.warns.length-6} more`:""}</div>`:"";
+ box.innerHTML=caps+errs+warns+`<div class="notice"><strong>${uids.length} mouse record(s), ${nch} field change(s)</strong><br>Changed fields: ${esc(summary)}</div>`;
+ if(btn){btn.disabled=blocked;btn.textContent=blocked?`${v.errs.length} issue(s) to fix`:`Apply ${nch} changes`}
+}
+function beRevert(){
+ const n=beChangeCount();
+ if(n&&!confirm(`Discard ${n} pending change(s)?`))return;
+ EDIT_DRAFT={};renderBulkEdit();
+}
+function beCommit(){
+ const v=beValidate();
+ if(!v.uids.length)return;
+ if(v.errs.length){alert("Cannot apply:\n\n"+v.errs.slice(0,12).join("\n"));return}
+ if(v.warns.length&&!confirm(`${v.uids.length} mouse record(s) will be updated with ${v.warns.length} warning(s). Continue?`))return;
+ const byField={},ids=[],moves=[];
+ v.uids.forEach(uid=>{
+  const m=mouse(uid),d=EDIT_DRAFT[uid];
+  beDiff(uid).forEach(x=>byField[x.field]=(byField[x.field]||0)+1);
+  if(m.cageBarcode!==d.cage)moves.push(`${m.mouseNo}: ${m.cageBarcode||"\u2014"}\u2192${d.cage}`);
+  m.earPunch=d.ear.trim();m.strain=d.strain.trim();m.sex=d.sex;
+  m.genotypes=genoParse(d.geno).list;
+  m.dob=d.dob;m.cageBarcode=d.cage;m.status=d.status;m.autoBreeding=false;
+  m.protocolNo=d.protocol.trim()||state.defaultProtocolNo;m.notes=d.notes.trim();
+  m.updatedAt=today();
+  ids.push(m.mouseNo);
+ });
+ const summary=Object.keys(byField).sort().map(f=>`${f} (${byField[f]})`).join(", ");
+ addEvent({type:"mouse update",mouseNo:ids.join(", "),
+  cageBarcode:[...new Set(v.uids.map(u=>mouse(u).cageBarcode).filter(Boolean))].join(", "),
+  note:`Batch edit: ${ids.length} mouse record(s) updated. Fields changed: ${summary}.`
+       +(moves.length?` Cage moves: ${moves.join("; ")}.`:"")});
+ const n=ids.length;EDIT_DRAFT={};
+ saveState();renderAll();
+ alert(`${n} mouse record(s) updated.\n\nSave the Working HTML to make this permanent.`);
+}
+
+
+/* ================= Automatic breeding state =================
+   Rules, as requested:
+     - a cage holding at least one active male AND one active female is a
+       breeding cage; it gets a breeding record automatically
+     - a cage type or a mouse status you set to Breeding yourself sticks
+     - everything else defaults to Holding
+   The bookkeeping flags (cage.autoType, mouse.autoBreeding, breeding.auto)
+   let the sync undo only what it created and never overrule a manual choice. */
+/* ================= Mice table sorting =================
+   Default order is Mouse ID ascending, which is what "reset" returns to.
+   Age sorts on DOB; mice with no DOB always sink to the bottom so they
+   cannot masquerade as the youngest or the oldest. */
+let MICE_SORT={key:"",dir:1};
+const MICE_SEX_RANK={Male:0,Female:1,Unknown:2};
+function miceByNo(a,b){return String(a.mouseNo).localeCompare(String(b.mouseNo),undefined,{numeric:true})}
+function miceApplySort(rows){
+ const d=MICE_SORT.dir;
+ if(MICE_SORT.key==="age"){
+  rows.sort((a,b)=>{
+   const ta=a.dob?Date.parse(a.dob):NaN,tb=b.dob?Date.parse(b.dob):NaN;
+   if(isNaN(ta)&&isNaN(tb))return miceByNo(a,b);
+   if(isNaN(ta))return 1;
+   if(isNaN(tb))return -1;
+   // dir 1 = youngest first, so the most recent DOB leads
+   return (tb-ta)*d||miceByNo(a,b);
+  });
+ }else if(MICE_SORT.key==="sex"){
+  rows.sort((a,b)=>{
+   const ra=MICE_SEX_RANK[a.sex]??3,rb=MICE_SEX_RANK[b.sex]??3;
+   return (ra-rb)*d||miceByNo(a,b);
+  });
+ }else rows.sort(miceByNo);
+ const th=(id,label,k)=>{
+  const el=document.getElementById(id);if(!el)return;
+  el.textContent=label;
+  el.dataset.sort=MICE_SORT.key===k?(MICE_SORT.dir===1?"asc":"desc"):"";
+  el.classList.toggle("on",MICE_SORT.key===k);
+ };
+ th("thSex","Sex","sex");
+ th("thAge","DOB / Age","age");
+ const btn=document.getElementById("miceSortReset");
+ if(btn)btn.style.display=MICE_SORT.key?"":"none";
+ return rows;
+}
+function miceSort(key){
+ if(MICE_SORT.key===key)MICE_SORT.dir=-MICE_SORT.dir;
+ else MICE_SORT={key,dir:1};
+ renderMice();
+}
+function miceSortReset(){MICE_SORT={key:"",dir:1};renderMice()}
+
+/* ================= Drag a box to select rows in the edit grid ================= */
+(function(){
+ const wrap=document.getElementById("beGridWrap"),box=document.getElementById("beMarquee");
+ if(!wrap||!box)return;
+ let drag=null;
+ const rel=(cx,cy)=>{const r=wrap.getBoundingClientRect();
+  return{x:cx-r.left+wrap.scrollLeft,y:cy-r.top+wrap.scrollTop}};
+ const rows=()=>[...wrap.querySelectorAll("#beBody tr[data-u]")];
+ const clearMarq=()=>rows().forEach(tr=>tr.classList.remove("marq"));
+
+ wrap.addEventListener("mousedown",e=>{
+  if(e.button!==0)return;
+  if(e.target.closest("input,select,textarea,button,label,a"))return;
+  const p=rel(e.clientX,e.clientY);
+  drag={x:p.x,y:p.y,add:e.shiftKey||e.metaKey||e.ctrlKey,moved:false,row:e.target.closest("tr[data-u]")};
+  wrap.classList.add("dragging");
+  e.preventDefault();
+ });
+ document.addEventListener("mousemove",e=>{
+  if(!drag)return;
+  const p=rel(e.clientX,e.clientY);
+  if(!drag.moved&&(Math.abs(p.x-drag.x)>3||Math.abs(p.y-drag.y)>3))drag.moved=true;
+  if(!drag.moved)return;
+  const x=Math.min(p.x,drag.x),y=Math.min(p.y,drag.y),
+        w=Math.abs(p.x-drag.x),h=Math.abs(p.y-drag.y);
+  box.style.display="block";box.style.left=x+"px";box.style.top=y+"px";
+  box.style.width=w+"px";box.style.height=h+"px";
+  const wr=wrap.getBoundingClientRect();
+  rows().forEach(tr=>{
+   const r=tr.getBoundingClientRect();
+   const top=r.top-wr.top+wrap.scrollTop;
+   tr.classList.toggle("marq",top+r.height>y&&top<y+h);
+  });
+ });
+ document.addEventListener("mouseup",()=>{
+  if(!drag)return;
+  const d=drag;drag=null;
+  wrap.classList.remove("dragging");box.style.display="none";
+  if(!d.add)EDIT_SEL.clear();
+  if(d.moved)rows().filter(tr=>tr.classList.contains("marq")).forEach(tr=>EDIT_SEL.add(tr.dataset.u));
+  else if(d.row){
+   const u=d.row.dataset.u;
+   if(d.add&&EDIT_SEL.has(u))EDIT_SEL.delete(u);else EDIT_SEL.add(u);
+  }
+  clearMarq();
+  renderBulkEdit();
+ });
+})();
+
+/* ================= Strain registry UI ================= */
+function renderStrains(){
+ const tb=document.getElementById("strainBody");if(!tb)return;
+ tb.innerHTML=(state.strains||[]).map((sd,i)=>{
+  const mice=state.mice.filter(m=>strainKey(m.strain)===strainKey(sd.name));
+  const own=mice.filter(m=>(m.genotypes||[]).filter(x=>x.locus).length).length;
+  return `<tr>
+  <td><strong>${esc(sd.name)}</strong></td>
+  <td><input data-strain="${i}" value="${esc(lociText(sd.loci))}" placeholder="Locus: Hom"></td>
+  <td>${mice.length}</td>
+  <td>${own}</td>
+  <td>${sd.loci&&sd.loci.length?mice.length-own:`<span class="muted">no default</span>`}</td>
+  <td><button class="btn small danger" onclick="removeStrain(${i})">Remove</button></td></tr>`;
+ }).join("")||`<tr><td colspan="6" class="empty">No strains registered yet.</td></tr>`;
+}
+document.getElementById("strainBody")?.addEventListener("change",e=>{
+ const i=e.target.dataset?.strain;if(i===undefined)return;
+ const parsed=genoParse(e.target.value);
+ state.strains[Number(i)].loci=parsed.list;
+ if(parsed.odd.length)alert(`Not recognised as a genotype status: ${parsed.odd.join(", ")}.\nStored as Unknown. Use WT / Het / Hom / +/+ / +/- / -/-.`);
+ saveState();renderAll();
+});
+function addStrain(){
+ const el=document.getElementById("newStrainName"),name=strainKey(el?.value);
+ if(!name){alert("Enter a strain name.");return}
+ if(strainDef(name)){alert(`Strain "${name}" already exists.`);return}
+ state.strains.push({name,loci:[],notes:""});
+ if(el)el.value="";
+ saveState();renderAll();
+}
+function removeStrain(i){
+ const sd=state.strains[i];if(!sd)return;
+ const n=state.mice.filter(m=>strainKey(m.strain)===strainKey(sd.name)&&!(m.genotypes||[]).filter(x=>x.locus).length).length;
+ const warn=n?`\n\n${n} mouse record(s) currently inherit this default and will fall back to "Genotype not entered".`:"";
+ if(!confirm(`Remove the strain entry "${sd.name}"?${warn}\n\nMouse records themselves are not deleted.`))return;
+ state.strains.splice(i,1);
+ saveState();renderAll();
+}
+/* Drop per-mouse genotypes that merely repeat the strain default. The
+   displayed genotype is unchanged; only the duplication goes away. */
+function tidyGenotypes(){
+ const sig=l=>l.map(x=>`${x.locus.toLowerCase()}:${x.status}`).sort().join("|");
+ const hits=state.mice.filter(m=>{
+  const own=(m.genotypes||[]).filter(x=>x.locus);
+  if(!own.length)return false;
+  const def=strainLoci(m.strain);
+  return def.length&&sig(own)===sig(def);
+ });
+ if(!hits.length){alert("Nothing to collapse: no mouse repeats its strain default exactly.");return}
+ if(!confirm(`${hits.length} mouse record(s) repeat their strain default exactly.\n\nClear the per-mouse copy so the default is inherited instead? The genotype shown for these mice does not change.`))return;
+ hits.forEach(m=>{m.genotypes=[];m.updatedAt=today()});
+ addEvent({type:"mouse update",mouseNo:hits.map(m=>m.mouseNo).join(", "),
+  note:`Collapsed ${hits.length} redundant per-mouse genotype(s) into the strain default.`});
+ saveState();renderAll();
+ alert(`${hits.length} record(s) now inherit their strain default.`);
+}
+
+/* ================= Shareable HTML report =================
+   A read-only snapshot meant to be looked at, not edited. Every style is
+   inlined and every colour is a literal hex, because email clients strip
+   <style> blocks and do not understand CSS custom properties. Layout is
+   table-based for the same reason. No script, no external requests, so it
+   renders identically offline and as an attachment. */
+const RPT={
+ bg:"#F8F4E7",card:"#FFFFFF",soft:"#EDE3DA",line:"#E4DACE",line2:"#D8CBBC",
+ ink:"#634C37",ink2:"#7A6850",ink3:"#736247",
+ pink:"#FDA4B1",pinkInk:"#5E2B37",teal:"#00D2C2",tealInk:"#06403C",
+ okT:"#196B46",okB:"#E7F7EF",warnT:"#875A08",warnB:"#FBF0D8",
+ badT:"#A22C48",badB:"#FDE7EB",infoT:"#0E6270",infoB:"#E2F5F3",
+ vioT:"#6A4BA5",vioB:"#F1EAFB",pinkT:"#A6355A",pinkBg:"#FDE7EB",
+ font:"Nunito,'Nunito Sans','Avenir Next',Helvetica,Arial,sans-serif",
+ mono:"'SF Mono',Menlo,Monaco,Consolas,'Courier New',monospace"
+};
+function rptPill(text,bg,fg,mono){
+ if(!text)return"";
+ return `<span style="display:inline-block;padding:2px 10px;border-radius:999px;background:${bg};`
+      + `color:${fg};font-family:${mono?RPT.mono:RPT.font};font-size:11px;font-weight:700;`
+      + `line-height:18px;white-space:nowrap">${esc(text)}</span>`;
+}
+function rptBadge(v){
+ const t=String(v||"").trim();if(!t)return"";
+ const map={
+  Active:[RPT.okB,RPT.okT],Done:[RPT.okB,RPT.okT],Resolved:[RPT.okB,RPT.okT],Weaned:[RPT.soft,RPT.ink3],
+  Breeding:[RPT.pinkBg,RPT.pinkT],Female:[RPT.pinkBg,RPT.pinkT],Pregnant:[RPT.pink,RPT.pinkInk],
+  Male:[RPT.infoB,RPT.infoT],Het:[RPT.infoB,RPT.infoT],Nursing:[RPT.infoB,RPT.infoT],
+  Hom:[RPT.vioB,RPT.vioT],"Vet Care":[RPT.vioB,RPT.vioT],
+  Weaning:[RPT.warnB,RPT.warnT],Quarantine:[RPT.warnB,RPT.warnT],
+  Overdue:[RPT.badB,RPT.badT],Open:[RPT.badB,RPT.badT],
+  Dead:[RPT.soft,RPT.ink3],Sacrificed:[RPT.soft,RPT.ink3],Holding:[RPT.soft,RPT.ink2]
+ };
+ const [bg,fg]=map[t]||[RPT.soft,RPT.ink2];
+ return rptPill(t,bg,fg,/^ABSL/.test(t));
+}
+function rptSection(title,inner){
+ return `<tr><td style="padding:22px 0 0">
+ <div style="font-family:${RPT.font};font-size:13px;font-weight:800;color:${RPT.ink2};
+  text-transform:uppercase;letter-spacing:.06em;padding-bottom:8px">${esc(title)}</div>
+ ${inner}</td></tr>`;
+}
+function rptTable(heads,rows){
+ const th=heads.map(h=>`<th align="left" style="font-family:${RPT.font};font-size:11px;font-weight:800;`
+  +`color:${RPT.ink3};background:${RPT.soft};padding:8px 11px;border:0">${esc(h)}</th>`).join("");
+ return `<table width="100%" cellpadding="0" cellspacing="0" border="0"
+  style="border-collapse:collapse;background:${RPT.card};border:1px solid ${RPT.line};border-radius:14px;overflow:hidden">
+  <tr>${th}</tr>${rows||`<tr><td colspan="${heads.length}" style="font-family:${RPT.font};font-size:13px;color:${RPT.ink3};padding:16px;text-align:center">Nothing to show.</td></tr>`}</table>`;
+}
+function rptCell(html,extra){
+ return `<td style="font-family:${RPT.font};font-size:13px;color:${RPT.ink};padding:8px 11px;
+  border-top:1px solid ${RPT.line};vertical-align:top;${extra||""}">${html}</td>`;
+}
+function buildShareReport(){
+ const am=state.mice.filter(activeMouse),ac=state.cages.filter(activeCage);
+ const ab=state.breeding.filter(b=>!b.endDate),preg=ab.filter(b=>b.status==="Pregnant");
+ const ul=state.litters.filter(l=>!l.weanedDate);
+ const vet=state.events.filter(e=>e.type==="Vet Care-New Health Report"&&e.taskStatus==="Open");
+ const alerts=[...document.querySelectorAll("#alerts .alert")].map(el=>({
+  kind:el.className.replace("alert","").trim(),text:el.textContent.trim()}));
+
+ /* KPI strip */
+ const kpi=[["Active mice",am.length],["Active cages",ac.length],
+   ["Breeding / pregnant",`${ab.length} / ${preg.length}`],
+   ["Unweaned litters",ul.length],["Open vet care",vet.length]];
+ const kpiCells=kpi.map(([k,v])=>`<td width="20%" style="padding:0 5px" valign="top">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0"
+   style="background:${RPT.card};border:1px solid ${RPT.line};border-radius:14px">
+   <tr><td style="padding:13px 14px;font-family:${RPT.font}">
+   <div style="font-size:11px;font-weight:700;color:${RPT.ink3}">${esc(k)}</div>
+   <div style="font-size:28px;font-weight:800;color:${RPT.ink};padding-top:2px">${esc(String(v))}</div>
+   </td></tr></table></td>`).join("");
+
+ /* alerts */
+ const alertBlocks=alerts.length?alerts.map(a=>{
+  const c=a.kind==="red"?[RPT.badB,RPT.badT]:a.kind==="vet"?[RPT.vioB,RPT.vioT]:a.kind==="ok"?[RPT.okB,RPT.okT]:[RPT.warnB,RPT.warnT];
+  return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:7px">
+   <tr><td style="background:${c[0]};color:${c[1]};font-family:${RPT.font};font-size:13px;
+   font-weight:600;padding:10px 14px;border-radius:11px;line-height:1.55">${esc(a.text)}</td></tr></table>`;
+ }).join(""):`<table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+  <td style="background:${RPT.okB};color:${RPT.okT};font-family:${RPT.font};font-size:13px;
+  font-weight:600;padding:10px 14px;border-radius:11px">Nothing needs attention right now.</td></tr></table>`;
+
+ /* rooms, with a table-based capacity bar */
+ const roomCells=state.rooms.map(r=>{
+  const used=roomUsed(r.name),pct=r.capacity?Math.min(100,Math.round(used*100/r.capacity)):0;
+  return `<td width="50%" valign="top" style="padding:0 5px">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0"
+   style="background:${RPT.card};border:1px solid ${RPT.line};border-radius:14px">
+   <tr><td style="padding:14px 16px;font-family:${RPT.font}">
+   <div style="font-family:${RPT.mono};font-size:15px;font-weight:800;color:${RPT.ink}">
+    ${esc(r.name)} ${rptPill(r.biosafety,RPT.infoB,RPT.infoT,true)}</div>
+   <div style="font-size:23px;font-weight:800;color:${RPT.ink};font-family:${RPT.mono};padding:4px 0 2px">${used} / ${r.capacity}</div>
+   <div style="font-size:13px;color:${RPT.ink2};line-height:1.6">${r.capacity-used} cage slots available<br>${esc(roomRuleText(r))}</div>
+   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:9px;background:${RPT.soft};border-radius:999px">
+    <tr><td><table width="${pct}%" cellpadding="0" cellspacing="0" border="0" style="background:${RPT.teal};border-radius:999px">
+    <tr><td style="height:10px;line-height:10px;font-size:1px">&nbsp;</td></tr></table></td></tr></table>
+   </td></tr></table></td>`;
+ }).join("");
+
+ /* cages */
+ const cageRows=[...ac].sort((a,b)=>a.room.localeCompare(b.room)||a.barcode.localeCompare(b.barcode)).map(c=>{
+  const occ=occupants(c.barcode),chk=cageCapacityCheck(c.barcode);
+  const who=occ.length?occ.map(m=>{
+   const e=effectiveGenotypes(m);
+   return `<div style="padding:2px 0"><span style="font-family:${RPT.mono};font-weight:800">${esc(m.mouseNo)}</span>
+   ${rptBadge(m.sex)} <span style="color:${RPT.ink2}">${esc(m.earPunch||"—")} &bull; ${esc(m.strain||"")}${e.list.length?" &bull; "+esc(lociText(e.list)):""}</span></div>`;
+  }).join(""):`<span style="color:${RPT.ink3}">empty</span>`;
+  return `<tr>
+  ${rptCell(`<span style="font-family:${RPT.mono};font-weight:800;white-space:nowrap">${esc(c.barcode)}</span><br>${rptBadge(c.type)}`)}
+  ${rptCell(`${esc(c.room)}<br><span style="color:${RPT.ink3};font-size:12px">${esc(c.biosafety)}</span>`)}
+  ${rptCell(who)}
+  ${rptCell(`<span style="color:${chk.ok?RPT.okT:RPT.badT};font-weight:700">${chk.ok?"":"RULE EXCEEDED &bull; "}${esc(chk.text)}</span>`)}
+  </tr>`;
+ }).join("");
+
+ /* breeding */
+ const breedRows=ab.map(b=>{
+  const nm=u=>mouse(u)?.mouseNo;
+  return `<tr>
+  ${rptCell(`<span style="font-family:${RPT.mono};font-weight:800;white-space:nowrap">${esc(b.cageBarcode)}</span>`)}
+  ${rptCell(esc(b.startDate))}
+  ${rptCell(esc(b.maleUids.map(nm).filter(Boolean).join(", ")||"—"))}
+  ${rptCell(esc(b.femaleUids.map(nm).filter(Boolean).join(", ")||"—"))}
+  ${rptCell(rptBadge(b.status)+(b.auto?" "+rptPill("auto",RPT.infoB,RPT.infoT):""))}
+  ${rptCell(esc(b.pregnantDate||"—"))}</tr>`;
+ }).join("");
+
+ /* litters */
+ const litterRows=[...state.litters].sort((a,b)=>b.dob.localeCompare(a.dob)).map(l=>{
+  const d=daysBetween(l.dob);
+  const st=l.weanedDate?"Weaned":d>28?"Overdue":d>=21?"Weaning":d>=0?"Nursing":"—";
+  return `<tr>
+  ${rptCell(`<span style="font-family:${RPT.mono};font-weight:800">${esc(l.id)}</span>`)}
+  ${rptCell(esc(breeding(l.breedingId)?.cageBarcode||"—"))}
+  ${rptCell(esc(l.dob))}${rptCell(d===null?"—":d+" d")}
+  ${rptCell(`${addDays(l.dob,21)} – ${addDays(l.dob,28)}`)}
+  ${rptCell(esc(String(l.totalPups??"—")))}${rptCell(rptBadge(st))}</tr>`;
+ }).join("");
+
+ /* strains */
+ const strainRows=(state.strains||[]).map(sd=>{
+  const mice=state.mice.filter(m=>strainKey(m.strain)===strainKey(sd.name));
+  const ownN=mice.filter(m=>(m.genotypes||[]).filter(x=>x.locus).length).length;
+  return `<tr>
+  ${rptCell(`<strong>${esc(sd.name)}</strong>`)}
+  ${rptCell(sd.loci&&sd.loci.length?esc(lociText(sd.loci)):`<span style="color:${RPT.ink3}">no default</span>`)}
+  ${rptCell(String(mice.length))}
+  ${rptCell(ownN?`${ownN} with their own genotype`:`<span style="color:${RPT.ink3}">all inherited</span>`)}</tr>`;
+ }).join("");
+
+ return `<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(state.labName||"Mouse Colony")} — colony report ${today()}</title></head>
+<body style="margin:0;padding:0;background:${RPT.bg}">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${RPT.bg}">
+<tr><td align="center" style="padding:24px 12px">
+<table width="980" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:980px">
+
+<tr><td style="padding-bottom:4px">
+ <table cellpadding="0" cellspacing="0" border="0" style="background:${RPT.pink};border-radius:14px">
+ <tr><td style="padding:12px 20px 12px 12px">
+  <table cellpadding="0" cellspacing="0" border="0"><tr>
+  <td width="44" style="padding-right:12px">
+   <table width="38" height="38" cellpadding="0" cellspacing="0" border="0" style="background:#FFFFFF;border-radius:19px">
+   <tr><td align="center" style="font-family:${RPT.font};font-size:14px;font-weight:800;color:${RPT.pinkInk}">MC</td></tr></table></td>
+  <td><div style="font-family:${RPT.font};font-size:21px;font-weight:800;color:${RPT.pinkInk}">${esc(state.labName||"Mouse Colony")}</div>
+   <div style="font-family:${RPT.mono};font-size:11px;color:${RPT.pinkInk};opacity:.75">Protocol #${esc(state.defaultProtocolNo||"")} &bull; colony report &bull; ${today()}</div></td>
+  </tr></table>
+ </td></tr></table></td></tr>
+
+<tr><td style="padding:14px 0 0"><table width="100%" cellpadding="0" cellspacing="0" border="0"
+ style="margin:0 -5px"><tr>${kpiCells}</tr></table></td></tr>
+
+${rptSection("Colony alerts",alertBlocks)}
+${rptSection("Room capacity",`<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 -5px"><tr>${roomCells}</tr></table>`)}
+${rptSection(`Cages (${ac.length})`,rptTable(["Cage","Room","Occupants","Housing rule"],cageRows))}
+${rptSection("Active breeding",rptTable(["Cage","Set up","Male","Female","Status","Pregnancy"],breedRows))}
+${rptSection("Litters",rptTable(["Litter","Cage","DOB","Age","Weaning window","Pups","Status"],litterRows))}
+${rptSection("Strains",rptTable(["Strain","Default genotype","Mice","Per-mouse overrides"],strainRows))}
+
+<tr><td style="padding:22px 4px 8px;font-family:${RPT.font};font-size:11px;color:${RPT.ink3};line-height:1.7">
+ Read-only snapshot generated ${today()} from the Mouse Colony working file. Not a live view: reopen the working file for current numbers.<br>
+ Unweaned pups are represented by their litter record and are not counted as adult cage occupants.
+</td></tr>
+
+</table></td></tr></table></body></html>`;
+}
+function downloadShareReport(){
+ download(`MouseColony_report_${snapshotTimestamp()}.html`,buildShareReport(),"text/html;charset=utf-8");
+}
+function previewShareReport(){
+ const w=window.open("","_blank");
+ if(!w){alert("The browser blocked the new tab. Allow pop-ups for this file, or use Download share report instead.");return}
+ w.document.write(buildShareReport());w.document.close();
+}
+
+/* ================= Print the dashboard ================= */
+function printDashboard(){
+ const am=state.mice.filter(activeMouse),ac=state.cages.filter(activeCage);
+ const ab=state.breeding.filter(b=>!b.endDate),preg=ab.filter(b=>b.status==="Pregnant");
+ const ul=state.litters.filter(l=>!l.weanedDate);
+ const vet=state.events.filter(e=>e.type==="Vet Care-New Health Report"&&e.taskStatus==="Open");
+ const alerts=[...document.querySelectorAll("#alerts .alert")].map(el=>el.textContent);
+ const kpi=[["Active mice",am.length],["Active cages",ac.length],["Breeding / pregnant",`${ab.length} / ${preg.length}`],
+            ["Unweaned litters",ul.length],["Open vet care",vet.length]];
+ const rooms=state.rooms.map(r=>{const used=roomUsed(r.name);
+  return `<tr><td>${esc(r.name)}</td><td>${esc(r.biosafety)}</td><td>${used} / ${r.capacity}</td><td>${esc(roomRuleText(r))}</td></tr>`}).join("");
+ const cages=[...ac].sort((a,b)=>a.room.localeCompare(b.room)||a.barcode.localeCompare(b.barcode)).map(c=>{
+  const occ=occupants(c.barcode),chk=cageCapacityCheck(c.barcode);
+  const who=occ.map(m=>`${m.mouseNo} (${m.sex||"?"}${m.earPunch?", "+m.earPunch:""})`).join("; ")||"empty";
+  return `<tr><td class="b">${esc(c.barcode)}</td><td>${esc(c.room)}</td><td>${esc(c.type)}</td><td>${occ.length}</td><td>${esc(who)}</td><td>${chk.ok?"":"RULE EXCEEDED — "}${esc(chk.text)}</td></tr>`}).join("");
+ const breed=ab.map(b=>{
+  const ms=b.maleUids.map(mouse).filter(Boolean).map(m=>m.mouseNo).join(", ")||"—";
+  const fs=b.femaleUids.map(mouse).filter(Boolean).map(m=>m.mouseNo).join(", ")||"—";
+  return `<tr><td class="b">${esc(b.cageBarcode)}</td><td>${esc(b.startDate)}</td><td>${esc(ms)}</td><td>${esc(fs)}</td><td>${esc(b.status)}${b.auto?" (auto)":""}</td><td>${esc(b.pregnantDate||"—")}</td></tr>`}).join("")
+  ||`<tr><td colspan="6">No active breeding cages.</td></tr>`;
+ const litters=[...state.litters].sort((a,b)=>b.dob.localeCompare(a.dob)).map(l=>{
+  const d=daysBetween(l.dob);
+  const st=l.weanedDate?"Weaned":d>28?"OVERDUE":d>=21?"Weaning window":d>=0?"Nursing":"—";
+  return `<tr><td class="b">${esc(l.id)}</td><td>${esc(breeding(l.breedingId)?.cageBarcode||"—")}</td><td>${esc(l.dob)}</td><td>${d===null?"—":d+" d"}</td><td>${addDays(l.dob,21)} – ${addDays(l.dob,28)}</td><td>${esc(String(l.totalPups??"—"))}</td><td>${esc(st)}</td></tr>`}).join("")
+  ||`<tr><td colspan="7">No litters recorded.</td></tr>`;
+ const strains=(state.strains||[]).map(sd=>`<tr><td class="b">${esc(sd.name)}</td><td>${esc(lociText(sd.loci)||"no default")}</td><td>${state.mice.filter(m=>strainKey(m.strain)===strainKey(sd.name)).length}</td></tr>`).join("")
+  ||`<tr><td colspan="3">No strains registered.</td></tr>`;
+ const w=window.open("","_blank","width=1000,height=900");
+ if(!w){alert("The browser blocked the print window. Allow pop-ups for this file and try again.");return}
+ w.document.write(`<html><head><title>${esc(state.labName||"Mouse Colony")} dashboard ${today()}</title><style>
+ body{font-family:Arial,Helvetica,sans-serif;padding:26px;color:#000;font-size:11pt}
+ h1{margin:0 0 2px;font-size:19pt}h2{font-size:12pt;margin:22px 0 6px;border-bottom:1.5px solid #000;padding-bottom:3px}
+ .sub{color:#444;margin-bottom:4px}
+ table{border-collapse:collapse;width:100%;margin-top:4px}
+ th,td{border:1px solid #999;padding:5px 7px;text-align:left;vertical-align:top;font-size:9.5pt}
+ th{background:#eee}
+ .b{font-family:"Courier New",monospace;font-weight:bold;white-space:nowrap}
+ .kpi{display:flex;gap:10px;margin:10px 0 0;flex-wrap:wrap}
+ .kpi div{border:1.5px solid #000;padding:7px 12px;min-width:112px}
+ .kpi span{display:block;font-size:8.5pt;text-transform:uppercase;letter-spacing:.04em;color:#444}
+ .kpi strong{font-size:17pt}
+ ul{margin:4px 0 0 18px;padding:0}li{margin-bottom:3px}
+ @page{size:A4 landscape;margin:12mm}
+ </style></head><body>
+ <h1>${esc(state.labName||"Mouse Colony")}</h1>
+ <div class="sub">Protocol #${esc(state.defaultProtocolNo||"")} &bull; printed ${today()}</div>
+ <div class="kpi">${kpi.map(([k,v])=>`<div><span>${esc(k)}</span><strong>${esc(String(v))}</strong></div>`).join("")}</div>
+ <h2>Colony alerts</h2>
+ ${alerts.length?`<ul>${alerts.map(a=>`<li>${esc(a)}</li>`).join("")}</ul>`:`<p>No automatic alerts.</p>`}
+ <h2>Room capacity</h2>
+ <table><tr><th>Room</th><th>Biosafety</th><th>Active cages</th><th>Cage rule</th></tr>${rooms}</table>
+ <h2>Cages (${ac.length})</h2>
+ <table><tr><th>Barcode</th><th>Room</th><th>Type</th><th>n</th><th>Occupants</th><th>Rule check</th></tr>${cages}</table>
+ <h2>Active breeding</h2>
+ <table><tr><th>Cage</th><th>Set up</th><th>Male</th><th>Female</th><th>Status</th><th>Pregnancy</th></tr>${breed}</table>
+ <h2>Litters</h2>
+ <table><tr><th>Litter</th><th>Cage</th><th>DOB</th><th>Age</th><th>Weaning window</th><th>Pups</th><th>Status</th></tr>${litters}</table>
+ <h2>Strains</h2>
+ <table><tr><th>Strain</th><th>Default genotype</th><th>Mice</th></tr>${strains}</table>
+ <script>window.onload=()=>window.print()<\/script></body></html>`);
+ w.document.close();
+}
+
+let AUTO_CHANGES=[];
+function syncBreeding(){
+ const made=[];
+ state.cages.filter(activeCage).forEach(c=>{
+  const occ=occupants(c.barcode);
+  const males=occ.filter(m=>m.sex==="Male"),females=occ.filter(m=>m.sex==="Female");
+  const mixed=males.length>0&&females.length>0;
+  const manualCage=c.type==="Breeding"&&c.autoType!==true;
+  const manualMouse=occ.some(m=>m.status==="Breeding"&&m.autoBreeding!==true);
+  const shouldBreed=mixed||manualCage||manualMouse;
+  const rec=activeBreedingForCage(c.barcode);
+  if(shouldBreed){
+   if(c.type!=="Breeding"){c.type="Breeding";c.autoType=true;made.push(`cage ${c.barcode} set to Breeding`)}
+   if(!rec){
+    state.breeding.push({
+     id:`b-auto-${Date.now()}-${Math.random().toString(16).slice(2,6)}`,
+     cageBarcode:c.barcode,startDate:today(),
+     maleUids:males.map(m=>m.uid),femaleUids:females.map(m=>m.uid),
+     status:"Active",pregnantDate:"",endDate:"",auto:true,
+     notes:"Opened automatically because this cage holds both sexes."
+    });
+    made.push(`breeding record opened for ${c.barcode}`);
+   }else if(rec.auto){
+    rec.maleUids=males.map(m=>m.uid);rec.femaleUids=females.map(m=>m.uid);
+   }
+   occ.forEach(m=>{if(m.status!=="Breeding"){m.status="Breeding";m.autoBreeding=true}});
+  }else{
+   if(rec&&rec.auto){rec.status="Ended";rec.endDate=today();made.push(`breeding record for ${c.barcode} closed`)}
+   if(c.autoType===true&&c.type==="Breeding"){c.type="Holding";c.autoType=false;made.push(`cage ${c.barcode} returned to Holding`)}
+   occ.forEach(m=>{if(m.status==="Breeding"&&m.autoBreeding===true){m.status="Active";m.autoBreeding=false}});
+  }
+ });
+ if(made.length)AUTO_CHANGES=AUTO_CHANGES.concat(made);
+ return made;
+}
+
+/* ---- pane switch on the merged batch page ---- */
+document.getElementById("batchSeg")?.addEventListener("click",e=>{
+ const pane=e.target.dataset?.pane;if(!pane)return;
+ document.querySelectorAll("#batchSeg .seg").forEach(b=>b.classList.toggle("active",b.dataset.pane===pane));
+ ["batchAddPane","batchEditPane"].forEach(id=>document.getElementById(id)?.classList.toggle("active",id===pane));
+});
+
+renderAll();
+setDirty(AUTO_CHANGES.length>0,AUTO_CHANGES.length
+ ?`Breeding state derived from cage occupancy (${AUTO_CHANGES.length} change(s)). Save the working HTML to keep it.`
+ :"");
+
+</script></body></html>

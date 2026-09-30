@@ -1,0 +1,15 @@
+# Working colony files: these contain real animal records. Never commit them.
+*Working*.html
+MouseColony_*.html
+MouseColony_*.csv
+MouseColony_*.xlsx
+MouseColony_*.json
+*_snapshot_*.html
+*_report_*.html
+*_backup_*.json
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
